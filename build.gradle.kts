@@ -1,17 +1,18 @@
+import ch.leadrian.samp.kamp.gradle.plugin.pluginwrappergenerator.PluginWrapperGeneratorExtension
+import com.google.common.base.CaseFormat
 import groovy.lang.Closure
 
 buildscript {
     dependencies {
         repositories {
             mavenCentral()
+            mavenLocal()
             maven {
                 setUrl("https://plugins.gradle.org/m2/")
             }
         }
-    }
 
-    dependencies {
-        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "1.0.0-rc1-5-gfeef657")
+        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "e605265")
     }
 }
 
@@ -24,20 +25,32 @@ plugins {
     `build-scan`
     id("org.jetbrains.dokka") version "0.9.17"
     id("com.palantir.git-version") version "0.12.0-rc2"
-    id("kamp-plugin-wrapper-generator")
 }
+
+apply(plugin = "kamp-plugin-wrapper-generator")
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc1")
+configure<PluginWrapperGeneratorExtension> {
+    packageName = "ch.leadrian.samp.kamp.fcnpcwrapper"
+    pluginName = "FCNPC"
+    removePrefix("FCNPC_")
+    nativeFunctionsCaseFormat = CaseFormat.UPPER_CAMEL
+    callbacksCaseFormat = CaseFormat.UPPER_CAMEL
+    interfaceDefintionFile(project.projectDir.resolve("src/main/idl/FCNPC.idl"))
+}
 
-    implementation(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "1.3.11")
-    implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.3.11")
-    implementation(group = "com.google.guava", name = "guava", version = "27.0.1-jre")
-    implementation(group = "javax.inject", name = "javax.inject", version = "1")
+dependencies {
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc1")
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = "1.0.0-rc1")
+
+    api(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "1.3.11")
+    api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.3.11")
+    api(group = "com.google.guava", name = "guava", version = "27.0.1-jre")
+    api(group = "com.google.inject", name = "guice", version = "4.2.2")
+    api(group = "javax.inject", name = "javax.inject", version = "1")
 
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = "5.4.0")
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-params", version = "5.4.0")
