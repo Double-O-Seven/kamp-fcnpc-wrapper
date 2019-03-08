@@ -159,18 +159,17 @@ const int FCNPC_INVALID_RECORD_ID = -1;
 [native] bool FCNPC_SetWeaponDefaultInfo(int weaponid, int reload_time = -1, int shoot_time = -1, int clip_size = -1, float accuracy = 1.0);
 [native] bool FCNPC_GetWeaponDefaultInfo(int weaponid, [out] int reload_time = -1, [out] int shoot_time = -1, [out] int clip_size = -1, [out] float accuracy = 1.0);
 
-
 [native] int FCNPC_SetKeys(int npcid, int ud_analog, int lr_analog, int keys);
 [native] int FCNPC_GetKeys(int npcid, [out] int ud_analog, [out] int lr_analog, [out] int keys);
 
 [native] int FCNPC_SetSpecialAction(int npcid, int actionid);
 [native] int FCNPC_GetSpecialAction(int npcid);
 
-[native] int FCNPC_SetAnimation(int npcid, int animationid, float fDelta = 4.1, int loop = 0, int lockx = 1, int locky = 1, int freeze = 0, int time = 1);
-[native] int FCNPC_SetAnimationByName(int npcid, string name, float fDelta = 4.1, int loop = 0, int lockx = 1, int locky = 1, int freeze = 0, int time = 1);
+[native] int FCNPC_SetAnimation(int npcid, int animationid, float fDelta = 4.1, bool loop = false, bool lockx = true, bool locky = true, bool freeze = false, int time = 1);
+[native] int FCNPC_SetAnimationByName(int npcid, string name, float fDelta = 4.1, bool loop = false, bool lockx = true, bool locky = true, bool freeze = false, int time = 1);
 [native] int FCNPC_ResetAnimation(int npcid);
-[native] int FCNPC_GetAnimation(int npcid, [out] int animationid = 0, [out] float fDelta = 4.1, [out] int loop = 0, [out] int lockx = 1, [out] int locky = 1, [out] int freeze = 0, [out] int time = 1);
-[native] int FCNPC_ApplyAnimation(int npcid, string animlib, string animname, float fDelta = 4.1, int loop = 0, int lockx = 1, int locky = 1, int freeze = 0, int time = 1);
+[native] int FCNPC_GetAnimation(int npcid, [out] int animationid = 0, [out] float fDelta = 4.1, [out] bool loop = false, [out] bool lockx = true, [out] bool locky = true, [out] bool freeze = false, [out] int time = 1);
+[native] int FCNPC_ApplyAnimation(int npcid, string animlib, string animname, float fDelta = 4.1, bool loop = false, bool lockx = true, bool locky = true, bool freeze = false, int time = 1);
 [native] int FCNPC_ClearAnimations(int npcid);
 
 /*

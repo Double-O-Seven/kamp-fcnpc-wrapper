@@ -12,7 +12,7 @@ buildscript {
             }
         }
 
-        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "e605265")
+        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "4da2976")
     }
 }
 
@@ -31,6 +31,7 @@ apply(plugin = "kamp-plugin-wrapper-generator")
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 configure<PluginWrapperGeneratorExtension> {
@@ -43,8 +44,8 @@ configure<PluginWrapperGeneratorExtension> {
 }
 
 dependencies {
-    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc1")
-    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = "1.0.0-rc1")
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc2")
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = "1.0.0-rc2")
 
     api(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "1.3.11")
     api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.3.11")
