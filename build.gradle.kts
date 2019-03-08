@@ -12,7 +12,7 @@ buildscript {
             }
         }
 
-        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "4da2976")
+        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "1f8ce5b")
     }
 }
 
