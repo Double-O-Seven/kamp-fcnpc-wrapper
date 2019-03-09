@@ -713,6 +713,11 @@ internal object FullyControllableNPCSpec : Spek({
                 npc.destroy()
             }
 
+            it("should destroy extension") {
+                assertThat(npc.extensions.isDestroyed)
+                        .isTrue()
+            }
+
             it("should call fcnpcNativeFunctions.destroy") {
                 verify { fcnpcNativeFunctions.destroy(npcId) }
             }

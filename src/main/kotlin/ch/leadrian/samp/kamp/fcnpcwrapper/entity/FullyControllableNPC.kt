@@ -16,6 +16,8 @@ import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.AbstractDestroyable
 import ch.leadrian.samp.kamp.core.api.entity.Entity
 import ch.leadrian.samp.kamp.core.api.entity.Player
+import ch.leadrian.samp.kamp.core.api.entity.extension.EntityExtensionContainer
+import ch.leadrian.samp.kamp.core.api.entity.extension.Extendable
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
@@ -24,7 +26,7 @@ class FullyControllableNPC
 internal constructor(
         val name: String,
         private val nativeFunctions: FCNPCNativeFunctions
-) : AbstractDestroyable(), Entity<FullyControllableNPCId> {
+) : AbstractDestroyable(), Entity<FullyControllableNPCId>, Extendable<FullyControllableNPC> {
 
     override val id: FullyControllableNPCId
 
@@ -36,6 +38,8 @@ internal constructor(
 
         id = FullyControllableNPCId(npcId)
     }
+
+    override val extensions: EntityExtensionContainer<FullyControllableNPC> = EntityExtensionContainer(this)
 
     val isSpawned: Boolean
         get() = nativeFunctions.isSpawned(id.value)
@@ -208,6 +212,7 @@ internal constructor(
     fun giveArmour(armour: Float): Float = nativeFunctions.giveArmour(id.value, armour)
 
     override fun onDestroy() {
+        extensions.destroy()
         nativeFunctions.destroy(id.value)
     }
 }
