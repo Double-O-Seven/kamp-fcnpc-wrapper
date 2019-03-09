@@ -1,9 +1,13 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.service
 
+import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
+import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
 import ch.leadrian.samp.kamp.core.api.amx.OutputString
+import ch.leadrian.samp.kamp.core.api.constants.WeaponModel
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,5 +56,35 @@ internal constructor(
     }
 
     fun isMovePathFindingUsed(mode: MovePathFinding): Boolean = nativeFunctions.isMovePathfindingUsed(mode.value)
+
+    fun setDefaultWeaponInfo(weapon: WeaponModel, info: WeaponInfo) {
+        nativeFunctions.setWeaponDefaultInfo(
+                weaponid = weapon.value,
+                reload_time = info.reloadTime ?: -1,
+                shoot_time = info.shootTime ?: -1,
+                clip_size = info.clipSize ?: -1,
+                accuracy = info.accuracy
+        )
+    }
+
+    fun getDefaultWeaponInfo(weapon: WeaponModel): WeaponInfo {
+        val reloadTime = MutableIntCell()
+        val shootTime = MutableIntCell()
+        val clipSize = MutableIntCell()
+        val accuracy = MutableFloatCell()
+        nativeFunctions.getWeaponDefaultInfo(
+                weaponid = weapon.value,
+                reload_time = reloadTime,
+                shoot_time = shootTime,
+                clip_size = clipSize,
+                accuracy = accuracy
+        )
+        return WeaponInfo(
+                reloadTime = reloadTime.value,
+                shootTime = shootTime.value,
+                clipSize = clipSize.value,
+                accuracy = accuracy.value
+        )
+    }
 
 }

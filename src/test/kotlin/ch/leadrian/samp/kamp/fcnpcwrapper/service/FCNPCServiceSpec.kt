@@ -1,8 +1,12 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.service
 
+import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
+import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
+import ch.leadrian.samp.kamp.core.api.constants.WeaponModel
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -204,6 +208,81 @@ internal object FCNPCServiceSpec : Spek({
                     }
                 }
             }
+        }
+    }
+
+    describe("setDefaultWeaponInfo") {
+        beforeEach {
+            every { fcnpcNativeFunctions.setWeaponDefaultInfo(any(), any(), any(), any(), any()) } returns true
+        }
+
+        context("all values are set") {
+            beforeEach {
+                fcnpcService.setDefaultWeaponInfo(
+                        WeaponModel.M4,
+                        WeaponInfo(
+                                reloadTime = 123,
+                                shootTime = 456,
+                                clipSize = 69,
+                                accuracy = 0.815f
+                        )
+                )
+            }
+
+            it("should call fcnpcNativeFunctions.setWeaponDefaultInfo with input values") {
+                verify {
+                    fcnpcNativeFunctions.setWeaponDefaultInfo(
+                            weaponid = WeaponModel.M4.value,
+                            reload_time = 123,
+                            shoot_time = 456,
+                            clip_size = 69,
+                            accuracy = 0.815f
+                    )
+                }
+            }
+        }
+
+        context("no values are set") {
+            beforeEach {
+                fcnpcService.setDefaultWeaponInfo(WeaponModel.M4, WeaponInfo())
+            }
+
+            it("should call fcnpcNativeFunctions.setWeaponDefaultInfo with default values") {
+                verify {
+                    fcnpcNativeFunctions.setWeaponDefaultInfo(
+                            weaponid = WeaponModel.M4.value,
+                            reload_time = -1,
+                            shoot_time = -1,
+                            clip_size = -1,
+                            accuracy = 1f
+                    )
+                }
+            }
+        }
+    }
+
+    describe("getDefaultWeaponInfo") {
+        beforeEach {
+            every {
+                fcnpcNativeFunctions.getWeaponDefaultInfo(
+                        weaponid = WeaponModel.MINIGUN.value,
+                        reload_time = any(),
+                        shoot_time = any(),
+                        clip_size = any(),
+                        accuracy = any()
+                )
+            } answers {
+                secondArg<MutableIntCell>().value = 123
+                thirdArg<MutableIntCell>().value = 456
+                arg<MutableIntCell>(3).value = 789
+                arg<MutableFloatCell>(4).value = 69f
+                true
+            }
+        }
+
+        it("should return weapon info") {
+            assertThat(fcnpcService.getDefaultWeaponInfo(WeaponModel.MINIGUN))
+                    .isEqualTo(WeaponInfo(reloadTime = 123, shootTime = 456, clipSize = 789, accuracy = 69f))
         }
     }
 })
