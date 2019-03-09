@@ -1,10 +1,21 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
+import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
 import ch.leadrian.samp.kamp.core.api.constants.SkinModel
+import ch.leadrian.samp.kamp.core.api.data.AngledLocation
+import ch.leadrian.samp.kamp.core.api.data.Location
+import ch.leadrian.samp.kamp.core.api.data.Position
+import ch.leadrian.samp.kamp.core.api.data.Quaternion
 import ch.leadrian.samp.kamp.core.api.data.Vector3D
+import ch.leadrian.samp.kamp.core.api.data.angledLocationOf
+import ch.leadrian.samp.kamp.core.api.data.locationOf
+import ch.leadrian.samp.kamp.core.api.data.positionOf
+import ch.leadrian.samp.kamp.core.api.data.quaternionOf
+import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.AbstractDestroyable
 import ch.leadrian.samp.kamp.core.api.entity.Entity
+import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
@@ -29,6 +40,92 @@ internal constructor(
     val isSpawned: Boolean
         get() = nativeFunctions.isSpawned(id.value)
 
+    val isDead: Boolean
+        get() = nativeFunctions.isDead(id.value)
+
+    val isStreamedInForAnyone: Boolean
+        get() = nativeFunctions.isStreamedInForAnyone(id.value)
+
+    var coordinates: Vector3D
+        get() {
+            val x = MutableFloatCell()
+            val y = MutableFloatCell()
+            val z = MutableFloatCell()
+            nativeFunctions.getPosition(npcid = id.value, x = x, y = y, z = z)
+            return vector3DOf(x.value, y.value, z.value)
+        }
+        set(value) {
+            nativeFunctions.setPosition(npcid = id.value, x = value.x, y = value.y, z = value.z)
+        }
+
+    var angle: Float
+        get() = nativeFunctions.getAngle(id.value)
+        set(value) {
+            nativeFunctions.setAngle(id.value, value)
+        }
+
+    var quaternion: Quaternion
+        get() {
+            val x = MutableFloatCell()
+            val y = MutableFloatCell()
+            val z = MutableFloatCell()
+            val w = MutableFloatCell()
+            nativeFunctions.getQuaternion(npcid = id.value, w = w, x = x, y = y, z = z)
+            return quaternionOf(x = x.value, y = y.value, z = z.value, w = w.value)
+        }
+        set(value) {
+            nativeFunctions.setQuaternion(npcid = id.value, x = value.x, y = value.y, z = value.z, w = value.w)
+        }
+
+    val velocity: Vector3D
+        get() {
+            val x = MutableFloatCell()
+            val y = MutableFloatCell()
+            val z = MutableFloatCell()
+            nativeFunctions.getVelocity(npcid = id.value, x = x, y = y, z = z)
+            return vector3DOf(x.value, y.value, z.value)
+        }
+
+    var speed: Float
+        get() = nativeFunctions.getSpeed(id.value)
+        set(value) {
+            nativeFunctions.setSpeed(id.value, value)
+        }
+
+    var interiorId: Int
+        get() = nativeFunctions.getInterior(id.value)
+        set(value) {
+            nativeFunctions.setInterior(npcid = id.value, interiorid = value)
+        }
+
+    var virtualWorldId: Int
+        get() = nativeFunctions.getVirtualWorld(id.value)
+        set(value) {
+            nativeFunctions.setVirtualWorld(npcid = id.value, worldid = value)
+        }
+
+    var position: Position
+        get() = positionOf(coordinates, angle)
+        set(value) {
+            coordinates = value
+            angle = value.angle
+        }
+
+    var location: Location
+        get() = locationOf(coordinates = coordinates, interiorId = interiorId, worldId = virtualWorldId)
+        set(value) {
+            coordinates = value
+            interiorId = value.interiorId
+            virtualWorldId = value.virtualWorldId
+        }
+
+    var angledLocation: AngledLocation
+        get() = angledLocationOf(location = location, angle = angle)
+        set(value) {
+            location = value
+            angle = value.angle
+        }
+
     fun spawn(skinModel: SkinModel, coordinates: Vector3D) {
         nativeFunctions.spawn(
                 npcid = id.value,
@@ -45,6 +142,41 @@ internal constructor(
 
     fun kill() {
         nativeFunctions.kill(id.value)
+    }
+
+    fun isStreamedInForPlayer(player: Player): Boolean =
+            nativeFunctions.isStreamedIn(npcid = id.value, forplayerid = player.id.value)
+
+    fun giveQuaternion(quaternion: Quaternion) {
+        nativeFunctions.giveQuaternion(
+                npcid = id.value,
+                x = quaternion.x,
+                y = quaternion.y,
+                z = quaternion.z,
+                w = quaternion.w
+        )
+    }
+
+    @JvmOverloads
+    fun setVelocity(velocity: Vector3D, updateCoordinates: Boolean = false) {
+        nativeFunctions.setVelocity(
+                npcid = id.value,
+                x = velocity.x,
+                y = velocity.y,
+                z = velocity.z,
+                update_pos = updateCoordinates
+        )
+    }
+
+    @JvmOverloads
+    fun giveVelocity(velocity: Vector3D, updateCoordinates: Boolean = false) {
+        nativeFunctions.giveVelocity(
+                npcid = id.value,
+                x = velocity.x,
+                y = velocity.y,
+                z = velocity.z,
+                update_pos = updateCoordinates
+        )
     }
 
     override fun onDestroy() {
