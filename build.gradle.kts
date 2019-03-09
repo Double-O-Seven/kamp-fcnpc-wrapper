@@ -32,6 +32,9 @@ apply(plugin = "kamp-plugin-wrapper-generator")
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        setUrl("https://dl.bintray.com/spekframework/spek")
+    }
 }
 
 configure<PluginWrapperGeneratorExtension> {
@@ -54,9 +57,11 @@ dependencies {
     api(group = "javax.inject", name = "javax.inject", version = "1")
 
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = "5.4.0")
-    testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-params", version = "5.4.0")
-    testImplementation(group = "org.assertj", name = "assertj-core", version = "3.11.1")
+    testImplementation(group = "org.assertj", name = "assertj-core", version = "3.12.1")
+    testImplementation(group = "io.mockk", name = "mockk", version = "1.9.1")
+    testImplementation(group = "org.spekframework.spek2", name = "spek-dsl-jvm", version = "2.0.1")
 
+    testRuntimeOnly(group = "org.spekframework.spek2", name = "spek-runner-junit5", version = "2.0.1")
     testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = "5.4.0")
 }
 
@@ -92,7 +97,9 @@ tasks {
     }
 
     test {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            includeEngines("spek2")
+        }
     }
 
     dokka {
