@@ -12,7 +12,7 @@ buildscript {
             }
         }
 
-        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "1f8ce5b")
+        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "1.0.0-rc1")
     }
 }
 
@@ -116,8 +116,8 @@ publishing {
             artifact(tasks["javadocJar"])
 
             pom {
-                name.set("Kamp wrapper for FCNPC")
-                description.set("")
+                name.set("Kamp FCNPC Wrapper")
+                description.set("Kotlin API for native SA-MP plugin FCNPC")
                 url.set("https://github.com/Double-O-Seven/kamp-fcnpc-wrapper")
                 licenses {
                     license {
