@@ -126,6 +126,30 @@ internal constructor(
             angle = value.angle
         }
 
+    var health: Float
+        get() = nativeFunctions.getHealth(id.value)
+        set(value) {
+            nativeFunctions.setHealth(id.value, value)
+        }
+
+    var armour: Float
+        get() = nativeFunctions.getArmour(id.value)
+        set(value) {
+            nativeFunctions.setArmour(id.value, value)
+        }
+
+    var isInvulnerable: Boolean
+        get() = nativeFunctions.isInvulnerable(id.value)
+        set(value) {
+            nativeFunctions.setInvulnerable(id.value, value)
+        }
+
+    var skinModel: SkinModel
+        get() = SkinModel[nativeFunctions.getSkin(id.value)]
+        set(value) {
+            nativeFunctions.setSkin(npcid = id.value, skinid = value.value)
+        }
+
     fun spawn(skinModel: SkinModel, coordinates: Vector3D) {
         nativeFunctions.spawn(
                 npcid = id.value,
@@ -178,6 +202,10 @@ internal constructor(
                 update_pos = updateCoordinates
         )
     }
+
+    fun giveHealth(health: Float): Float = nativeFunctions.giveHealth(id.value, health)
+
+    fun giveArmour(armour: Float): Float = nativeFunctions.giveArmour(id.value, armour)
 
     override fun onDestroy() {
         nativeFunctions.destroy(id.value)

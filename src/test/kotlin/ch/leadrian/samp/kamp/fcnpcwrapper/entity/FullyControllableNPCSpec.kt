@@ -425,6 +425,110 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
 
+        describe("health") {
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getHealth(npcId) } returns 69f
+                }
+
+                it("should return health") {
+                    assertThat(npc.health)
+                            .isEqualTo(69f)
+                }
+            }
+
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setHealth(any(), any()) } returns true
+                    npc.health = 69f
+                }
+
+                it("should call fcnpcNativeFunctions.setHealth") {
+                    verify { fcnpcNativeFunctions.setHealth(npcId, 69f) }
+                }
+            }
+        }
+
+        describe("armour") {
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getArmour(npcId) } returns 69f
+                }
+
+                it("should return armour") {
+                    assertThat(npc.armour)
+                            .isEqualTo(69f)
+                }
+            }
+
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setArmour(any(), any()) } returns true
+                    npc.armour = 69f
+                }
+
+                it("should call fcnpcNativeFunctions.setArmour") {
+                    verify { fcnpcNativeFunctions.setArmour(npcId, 69f) }
+                }
+            }
+        }
+
+        describe("isInvulnerable") {
+            describe("getter") {
+                listOf(true, false).forEach { isInvulnerable ->
+                    context("fcnpcNativeFunctions.isInvulnerable returns $isInvulnerable") {
+                        beforeEach {
+                            every { fcnpcNativeFunctions.isInvulnerable(npcId) } returns isInvulnerable
+                        }
+
+                        it("should return $isInvulnerable") {
+                            assertThat(npc.isInvulnerable)
+                                    .isEqualTo(isInvulnerable)
+                        }
+                    }
+                }
+            }
+
+            describe("setter") {
+                listOf(true, false).forEach { isInvulnerable ->
+                    context("value is set to $isInvulnerable") {
+                        beforeEach {
+                            every { fcnpcNativeFunctions.setInvulnerable(any(), any()) } returns true
+                            npc.isInvulnerable = isInvulnerable
+                        }
+
+                        it("should call fcnpcNativeFunctions.setInvulnerable with value $isInvulnerable") {
+                            verify { fcnpcNativeFunctions.setInvulnerable(npcId, isInvulnerable) }
+                        }
+                    }
+                }
+            }
+        }
+
+        describe("skinModel") {
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getSkin(npcId) } returns SkinModel.BALLAS1.value
+                }
+
+                it("should return skin model") {
+                    assertThat(npc.skinModel)
+                            .isEqualTo(SkinModel.BALLAS1)
+                }
+            }
+
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setSkin(any(), any()) } returns true
+                    npc.skinModel = SkinModel.BALLAS1
+                }
+
+                it("should call fcnpcNativeFunctions.setSkin") {
+                    verify { fcnpcNativeFunctions.setSkin(npcId, SkinModel.BALLAS1.value) }
+                }
+            }
+        }
+
         describe("spawn") {
             beforeEach {
                 every { fcnpcNativeFunctions.spawn(any(), any(), any(), any(), any()) } returns true
@@ -581,6 +685,28 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
 
+        describe("giveHealth") {
+            beforeEach {
+                every { fcnpcNativeFunctions.giveHealth(npcId, 13.37f) } returns 69f
+            }
+
+            it("should return updated health") {
+                assertThat(npc.giveHealth(13.37f))
+                        .isEqualTo(69f)
+            }
+        }
+
+        describe("giveArmour") {
+            beforeEach {
+                every { fcnpcNativeFunctions.giveArmour(npcId, 13.37f) } returns 69f
+            }
+
+            it("should return updated armour") {
+                assertThat(npc.giveArmour(13.37f))
+                        .isEqualTo(69f)
+            }
+        }
+
         describe("destroy") {
             beforeEach {
                 every { fcnpcNativeFunctions.destroy(any()) } returns true
@@ -592,5 +718,4 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
     }
-
 })
