@@ -299,54 +299,52 @@ internal class WeaponsSpec : Spek({
     }
 
     describe("setInfo") {
-        describe("setter") {
+        beforeEach {
+            every { fcnpcNativeFunctions.setWeaponInfo(any(), any(), any(), any(), any(), any()) } returns true
+        }
+
+        context("all values are set") {
             beforeEach {
-                every { fcnpcNativeFunctions.setWeaponInfo(any(), any(), any(), any(), any(), any()) } returns true
-            }
-
-            context("all values are set") {
-                beforeEach {
-                    weapons.setInfo(
-                            WeaponModel.M4,
-                            WeaponInfo(
-                                    reloadTime = 123,
-                                    shootTime = 456,
-                                    clipSize = 69,
-                                    accuracy = 0.815f
-                            )
-                    )
-                }
-
-                it("should call fcnpcNativeFunctions.setWeaponInfo with input values") {
-                    verify {
-                        fcnpcNativeFunctions.setWeaponInfo(
-                                npcid = npcId,
-                                weaponid = WeaponModel.M4.value,
-                                reload_time = 123,
-                                shoot_time = 456,
-                                clip_size = 69,
+                weapons.setInfo(
+                        WeaponModel.M4,
+                        WeaponInfo(
+                                reloadTime = 123,
+                                shootTime = 456,
+                                clipSize = 69,
                                 accuracy = 0.815f
                         )
-                    }
-                }
+                )
             }
 
-            context("no values are set") {
-                beforeEach {
-                    weapons.setInfo(WeaponModel.M4, WeaponInfo())
+            it("should call fcnpcNativeFunctions.setWeaponInfo with input values") {
+                verify {
+                    fcnpcNativeFunctions.setWeaponInfo(
+                            npcid = npcId,
+                            weaponid = WeaponModel.M4.value,
+                            reload_time = 123,
+                            shoot_time = 456,
+                            clip_size = 69,
+                            accuracy = 0.815f
+                    )
                 }
+            }
+        }
 
-                it("should call fcnpcNativeFunctions.setWeaponInfo with default values") {
-                    verify {
-                        fcnpcNativeFunctions.setWeaponInfo(
-                                npcid = npcId,
-                                weaponid = WeaponModel.M4.value,
-                                reload_time = -1,
-                                shoot_time = -1,
-                                clip_size = -1,
-                                accuracy = 1f
-                        )
-                    }
+        context("no values are set") {
+            beforeEach {
+                weapons.setInfo(WeaponModel.M4, WeaponInfo())
+            }
+
+            it("should call fcnpcNativeFunctions.setWeaponInfo with default values") {
+                verify {
+                    fcnpcNativeFunctions.setWeaponInfo(
+                            npcid = npcId,
+                            weaponid = WeaponModel.M4.value,
+                            reload_time = -1,
+                            shoot_time = -1,
+                            clip_size = -1,
+                            accuracy = 1f
+                    )
                 }
             }
         }
