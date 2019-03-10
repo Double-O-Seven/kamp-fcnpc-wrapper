@@ -4,7 +4,9 @@ import ch.leadrian.samp.kamp.core.api.data.Vector3D
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.EntityCheck
 import java.util.EnumSet
 
-data class AimParameters(
+data class AimParameters
+@JvmOverloads
+constructor(
         val shoot: Boolean = false,
         val shootDelay: Int? = null,
         val setAngle: Boolean = true,

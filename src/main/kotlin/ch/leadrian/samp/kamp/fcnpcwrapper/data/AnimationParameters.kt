@@ -11,7 +11,9 @@ sealed class AnimationParameters {
 
 }
 
-data class SimpleAnimationParameters(
+data class SimpleAnimationParameters
+@JvmOverloads
+constructor(
         override val fDelta: Float = 4.1f,
         override val loop: Boolean = false,
         override val lockX: Boolean = true,
@@ -20,7 +22,9 @@ data class SimpleAnimationParameters(
         override val time: Int = 1
 ) : AnimationParameters()
 
-data class NamedAnimationParameters(
+data class NamedAnimationParameters
+@JvmOverloads
+constructor(
         val name: String,
         override val fDelta: Float = 4.1f,
         override val loop: Boolean = false,
@@ -30,7 +34,9 @@ data class NamedAnimationParameters(
         override val time: Int = 1
 ) : AnimationParameters()
 
-data class AnimationWithIdParameters(
+data class AnimationWithIdParameters
+@JvmOverloads
+constructor(
         val id: Int,
         override val fDelta: Float = 4.1f,
         override val loop: Boolean = false,
