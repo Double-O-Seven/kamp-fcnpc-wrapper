@@ -15,7 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
-internal class WeaponsSpec : Spek({
+internal class FCNPCWeaponsSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
     val npcId = 123
     val npc by memoized {
@@ -23,7 +23,7 @@ internal class WeaponsSpec : Spek({
             every { id } returns FullyControllableNPCId.valueOf(npcId)
         }
     }
-    val weapons by memoized { Weapons(npc, fcnpcNativeFunctions) }
+    val weapons by memoized { FCNPCWeapons(npc, fcnpcNativeFunctions) }
 
     describe("current") {
         describe("getter") {

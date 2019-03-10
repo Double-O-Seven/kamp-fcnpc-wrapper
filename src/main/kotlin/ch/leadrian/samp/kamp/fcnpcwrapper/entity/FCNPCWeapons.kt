@@ -8,7 +8,7 @@ import ch.leadrian.samp.kamp.core.api.constants.WeaponState
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
 
-class Weapons internal constructor(
+class FCNPCWeapons internal constructor(
         override val npc: FullyControllableNPC,
         private val nativeFunctions: FCNPCNativeFunctions
 ) : HasFullyControllableNPC {
