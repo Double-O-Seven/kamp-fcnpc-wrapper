@@ -45,6 +45,10 @@ internal constructor(
 
     override val extensions: EntityExtensionContainer<FullyControllableNPC> = EntityExtensionContainer(this)
 
+    val weapons: FCNPCWeapons = FCNPCWeapons(this, nativeFunctions)
+
+    val animation: FCNPCAnimation = FCNPCAnimation(this, nativeFunctions)
+
     val isSpawned: Boolean
         get() = nativeFunctions.isSpawned(id.value)
 
