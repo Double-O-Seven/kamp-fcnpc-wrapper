@@ -1,7 +1,5 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory
 
-import ch.leadrian.samp.kamp.core.api.service.PlayerService
-import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.FCNPCCombat
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.FullyControllableNPC
 import io.mockk.mockk
@@ -10,13 +8,8 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 internal object FCNPCCombatFactorySpec : Spek({
-    val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
-    val playerService by memoized { mockk<PlayerService>() }
     val fcnpcCombatFactory by memoized {
-        FCNPCCombatFactory(
-                fcnpcNativeFunctions,
-                playerService
-        )
+        FCNPCCombatFactory(mockk(), mockk(), mockk())
     }
 
     describe("create") {

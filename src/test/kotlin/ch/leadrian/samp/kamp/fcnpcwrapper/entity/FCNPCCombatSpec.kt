@@ -1,7 +1,12 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
+import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
+import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
+import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target
+import ch.leadrian.samp.kamp.core.api.constants.BulletHitType
 import ch.leadrian.samp.kamp.core.api.constants.FightingStyle
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
+import ch.leadrian.samp.kamp.core.api.constants.WeaponModel
 import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
@@ -9,6 +14,8 @@ import ch.leadrian.samp.kamp.core.api.service.PlayerService
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.EntityCheck
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.AimParameters
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.NearbyTarget
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponShotParameters
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 import io.mockk.every
 import io.mockk.mockk
@@ -21,13 +28,16 @@ import java.util.EnumSet
 object FCNPCCombatSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
     val playerService by memoized { mockk<PlayerService>() }
+    val hitTargetResolver by memoized { mockk<HitTargetResolver>() }
     val npcId = 123
     val npc by memoized {
         mockk<FullyControllableNPC> {
             every { id } returns FullyControllableNPCId.valueOf(npcId)
         }
     }
-    val combat by memoized { FCNPCCombat(npc, fcnpcNativeFunctions, playerService) }
+    val combat by memoized {
+        FCNPCCombat(npc, fcnpcNativeFunctions, playerService, hitTargetResolver)
+    }
 
     describe("fightingStyle") {
         describe("getter") {
@@ -475,6 +485,149 @@ object FCNPCCombatSpec : Spek({
                             .isEqualTo(isAiming)
                 }
             }
+        }
+    }
+
+    describe("triggerWeaponShot") {
+        lateinit var hitTarget: Target
+        val hitId = 69
+
+        beforeEach {
+            every {
+                fcnpcNativeFunctions.triggerWeaponShot(
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any(),
+                        any()
+                )
+            } returns true
+            hitTarget = mockk {
+                every { type } returns BulletHitType.PLAYER
+            }
+            every { hitTargetResolver.getHitId(hitTarget) } returns hitId
+        }
+
+        context("with default parameters") {
+            beforeEach {
+                combat.triggerWeaponShot(
+                        WeaponShotParameters(
+                                weapon = WeaponModel.M4,
+                                hitTarget = hitTarget,
+                                coordinates = vector3DOf(1f, 2f, 3f)
+                        )
+                )
+            }
+
+            it("should call fcnpcNativeFunctions.triggerWeaponShot") {
+                verify {
+                    fcnpcNativeFunctions.triggerWeaponShot(
+                            npcid = npcId,
+                            weaponid = WeaponModel.M4.value,
+                            hitid = hitId,
+                            hittype = BulletHitType.PLAYER.value,
+                            x = 1f,
+                            y = 2f,
+                            z = 3f,
+                            is_hit = true,
+                            offset_from_x = 0f,
+                            offset_from_y = 0f,
+                            offset_from_z = 0f,
+                            between_check_flags = EntityCheck.ALL.value
+                    )
+                }
+            }
+        }
+
+        listOf(true, false).forEach { isHit ->
+            context("with parameters set, isHit set to $isHit") {
+                beforeEach {
+                    combat.triggerWeaponShot(
+                            WeaponShotParameters(
+                                    weapon = WeaponModel.M4,
+                                    hitTarget = hitTarget,
+                                    coordinates = vector3DOf(1f, 2f, 3f),
+                                    isHit = isHit,
+                                    offsetFrom = vector3DOf(4f, 5f, 6f),
+                                    betweenChecks = EnumSet.of(EntityCheck.PLAYER)
+                            )
+                    )
+                }
+
+                it("should call fcnpcNativeFunctions.triggerWeaponShot") {
+                    verify {
+                        fcnpcNativeFunctions.triggerWeaponShot(
+                                npcid = npcId,
+                                weaponid = WeaponModel.M4.value,
+                                hitid = hitId,
+                                hittype = BulletHitType.PLAYER.value,
+                                x = 1f,
+                                y = 2f,
+                                z = 3f,
+                                is_hit = isHit,
+                                offset_from_x = 4f,
+                                offset_from_y = 5f,
+                                offset_from_z = 6f,
+                                between_check_flags = EntityCheck.PLAYER.value
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    describe("getClosestEntityInBetween") {
+        val hitTarget by memoized { mockk<Target>() }
+        lateinit var nearbyTarget: NearbyTarget
+
+        beforeEach {
+            val hitId = 69
+            val playerMapObjectOwner = 187
+            every {
+                fcnpcNativeFunctions.getClosestEntityInBetween(
+                        npcid = npcId,
+                        x = 1f,
+                        y = 2f,
+                        z = 3f,
+                        range = 4f,
+                        between_check_flags = EntityCheck.PLAYER.value or EntityCheck.VEHICLE.value,
+                        entity_id = any(),
+                        entity_type = any(),
+                        object_owner_id = any(),
+                        point_x = any(),
+                        point_y = any(),
+                        point_z = any()
+                )
+            } answers {
+                arg<MutableIntCell>(6).value = hitId
+                arg<MutableIntCell>(7).value = BulletHitType.PLAYER.value
+                arg<MutableIntCell>(8).value = playerMapObjectOwner
+                arg<MutableFloatCell>(9).value = 5f
+                arg<MutableFloatCell>(10).value = 6f
+                arg<MutableFloatCell>(11).value = 7f
+                true
+            }
+            every {
+                hitTargetResolver.getHitTarget(hitId, BulletHitType.PLAYER, PlayerId.valueOf(playerMapObjectOwner))
+            } returns hitTarget
+            nearbyTarget = combat.getClosestEntityInBetween(
+                    vector3DOf(1f, 2f, 3f),
+                    4f,
+                    EntityCheck.PLAYER,
+                    EntityCheck.VEHICLE
+            )
+        }
+
+        it("should return NearbyTarget") {
+            assertThat(nearbyTarget)
+                    .isEqualTo(NearbyTarget(hitTarget, vector3DOf(5f, 6f, 7f)))
         }
     }
 })

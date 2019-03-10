@@ -1,18 +1,26 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
+import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
+import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
+import ch.leadrian.samp.kamp.core.api.constants.BulletHitType
 import ch.leadrian.samp.kamp.core.api.constants.FightingStyle
 import ch.leadrian.samp.kamp.core.api.data.Vector3D
+import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
 import ch.leadrian.samp.kamp.core.api.service.PlayerService
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
+import ch.leadrian.samp.kamp.fcnpcwrapper.constants.EntityCheck
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.AimParameters
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.NearbyTarget
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponShotParameters
 
 class FCNPCCombat
 internal constructor(
         override val npc: FullyControllableNPC,
         private val nativeFunctions: FCNPCNativeFunctions,
-        private val playerService: PlayerService
+        private val playerService: PlayerService,
+        private val hitTargetResolver: HitTargetResolver
 ) : HasFullyControllableNPC {
 
     var fightingStyle: FightingStyle
@@ -104,5 +112,57 @@ internal constructor(
 
     fun isAimingAt(player: Player): Boolean =
             nativeFunctions.isAimingAtPlayer(npcid = npc.id.value, playerid = player.id.value)
+
+    fun triggerWeaponShot(parameters: WeaponShotParameters) {
+        val hitId = hitTargetResolver.getHitId(parameters.hitTarget)
+        nativeFunctions.triggerWeaponShot(
+                npcid = npc.id.value,
+                weaponid = parameters.weapon.value,
+                x = parameters.coordinates.x,
+                y = parameters.coordinates.y,
+                z = parameters.coordinates.z,
+                hitid = hitId,
+                hittype = parameters.hitTarget.type.value,
+                is_hit = parameters.isHit,
+                offset_from_x = parameters.offsetFrom.x,
+                offset_from_y = parameters.offsetFrom.y,
+                offset_from_z = parameters.offsetFrom.z,
+                between_check_flags = parameters.betweenChecksValue
+        )
+    }
+
+    fun getClosestEntityInBetween(
+            coordinates: Vector3D,
+            range: Float,
+            vararg betweenChecks: EntityCheck
+    ): NearbyTarget {
+        val betweenChecksValue = betweenChecks.fold(0) { flags, check -> flags or check.value }
+        val entityId = MutableIntCell()
+        val entityType = MutableIntCell()
+        val objectOwnerId = MutableIntCell()
+        val x = MutableFloatCell()
+        val y = MutableFloatCell()
+        val z = MutableFloatCell()
+        nativeFunctions.getClosestEntityInBetween(
+                npcid = npc.id.value,
+                x = coordinates.x,
+                y = coordinates.y,
+                z = coordinates.z,
+                range = range,
+                between_check_flags = betweenChecksValue,
+                entity_id = entityId,
+                entity_type = entityType,
+                object_owner_id = objectOwnerId,
+                point_x = x,
+                point_y = y,
+                point_z = z
+        )
+        val hitTarget = hitTargetResolver.getHitTarget(
+                entityId.value,
+                BulletHitType[entityType.value],
+                PlayerId.valueOf(objectOwnerId.value)
+        )
+        return NearbyTarget(hitTarget, vector3DOf(x.value, y.value, z.value))
+    }
 
 }
