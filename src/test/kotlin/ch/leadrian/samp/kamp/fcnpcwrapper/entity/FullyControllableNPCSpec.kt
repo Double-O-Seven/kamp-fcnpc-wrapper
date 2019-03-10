@@ -4,6 +4,7 @@ import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
 import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
 import ch.leadrian.samp.kamp.core.api.constants.SkinModel
+import ch.leadrian.samp.kamp.core.api.constants.SpecialAction
 import ch.leadrian.samp.kamp.core.api.data.angledLocationOf
 import ch.leadrian.samp.kamp.core.api.data.locationOf
 import ch.leadrian.samp.kamp.core.api.data.playerKeysOf
@@ -556,6 +557,32 @@ internal object FullyControllableNPCSpec : Spek({
 
                 it("should call fcnpcNativeFunctions.setKeys") {
                     verify { fcnpcNativeFunctions.setKeys(npcid = npcId, ud_analog = 123, lr_analog = 456, keys = 789) }
+                }
+            }
+        }
+
+        describe("specialAction") {
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getSpecialAction(npcId) } returns SpecialAction.USE_JETPACK.value
+                }
+
+                it("should return special action") {
+                    assertThat(npc.specialAction)
+                            .isEqualTo(SpecialAction.USE_JETPACK)
+                }
+            }
+
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setSpecialAction(any(), any()) } returns true
+                    npc.specialAction = SpecialAction.SMOKE_CIGGY
+                }
+
+                it("should call fcnpcNativeFunctions.setSpecialAction") {
+                    verify {
+                        fcnpcNativeFunctions.setSpecialAction(npcid = npcId, actionid = SpecialAction.SMOKE_CIGGY.value)
+                    }
                 }
             }
         }

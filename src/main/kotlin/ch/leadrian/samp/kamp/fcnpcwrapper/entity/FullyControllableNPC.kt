@@ -4,6 +4,7 @@ import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
 import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
 import ch.leadrian.samp.kamp.core.api.constants.SkinModel
+import ch.leadrian.samp.kamp.core.api.constants.SpecialAction
 import ch.leadrian.samp.kamp.core.api.data.AngledLocation
 import ch.leadrian.samp.kamp.core.api.data.Location
 import ch.leadrian.samp.kamp.core.api.data.PlayerKeys
@@ -172,6 +173,12 @@ internal constructor(
                     lr_analog = value.leftRight,
                     keys = value.keys
             )
+        }
+
+    var specialAction: SpecialAction
+        get() = SpecialAction[nativeFunctions.getSpecialAction(id.value)]
+        set(value) {
+            nativeFunctions.setSpecialAction(npcid = id.value, actionid = value.value)
         }
 
     fun spawn(skinModel: SkinModel, coordinates: Vector3D) {
