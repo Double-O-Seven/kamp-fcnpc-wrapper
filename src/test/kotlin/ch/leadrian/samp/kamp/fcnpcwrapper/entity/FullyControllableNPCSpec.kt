@@ -1,10 +1,12 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
 import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
+import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
 import ch.leadrian.samp.kamp.core.api.constants.SkinModel
 import ch.leadrian.samp.kamp.core.api.data.angledLocationOf
 import ch.leadrian.samp.kamp.core.api.data.locationOf
+import ch.leadrian.samp.kamp.core.api.data.playerKeysOf
 import ch.leadrian.samp.kamp.core.api.data.positionOf
 import ch.leadrian.samp.kamp.core.api.data.quaternionOf
 import ch.leadrian.samp.kamp.core.api.data.vector3DOf
@@ -525,6 +527,35 @@ internal object FullyControllableNPCSpec : Spek({
 
                 it("should call fcnpcNativeFunctions.setSkin") {
                     verify { fcnpcNativeFunctions.setSkin(npcId, SkinModel.BALLAS1.value) }
+                }
+            }
+        }
+
+        describe("keys") {
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getKeys(npcId, any(), any(), any()) } answers {
+                        secondArg<MutableIntCell>().value = 123
+                        thirdArg<MutableIntCell>().value = 456
+                        arg<MutableIntCell>(3).value = 789
+                        true
+                    }
+                }
+
+                it("should return keys") {
+                    assertThat(npc.keys)
+                            .isEqualTo(playerKeysOf(upDown = 123, leftRight = 456, keys = 789))
+                }
+            }
+
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setKeys(any(), any(), any(), any()) } returns true
+                    npc.keys = playerKeysOf(upDown = 123, leftRight = 456, keys = 789)
+                }
+
+                it("should call fcnpcNativeFunctions.setKeys") {
+                    verify { fcnpcNativeFunctions.setKeys(npcid = npcId, ud_analog = 123, lr_analog = 456, keys = 789) }
                 }
             }
         }

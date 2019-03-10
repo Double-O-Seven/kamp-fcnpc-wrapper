@@ -160,7 +160,7 @@ const int FCNPC_INVALID_RECORD_ID = -1;
 [native] bool FCNPC_GetWeaponDefaultInfo(int weaponid, [out] int reload_time = -1, [out] int shoot_time = -1, [out] int clip_size = -1, [out] float accuracy = 1.0);
 
 [native] bool FCNPC_SetKeys(int npcid, int ud_analog, int lr_analog, int keys);
-[native] int FCNPC_GetKeys(int npcid, [out] int ud_analog, [out] int lr_analog, [out] int keys);
+[native] bool FCNPC_GetKeys(int npcid, [out] int ud_analog, [out] int lr_analog, [out] int keys);
 
 [native] bool FCNPC_SetSpecialAction(int npcid, int actionid);
 [native] int FCNPC_GetSpecialAction(int npcid);
