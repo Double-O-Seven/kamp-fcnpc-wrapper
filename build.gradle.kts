@@ -47,8 +47,8 @@ configure<PluginWrapperGeneratorExtension> {
 }
 
 dependencies {
-    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc3")
-    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = "1.0.0-rc3")
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc4")
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = "1.0.0-rc4")
 
     api(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "1.3.11")
     api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.3.11")

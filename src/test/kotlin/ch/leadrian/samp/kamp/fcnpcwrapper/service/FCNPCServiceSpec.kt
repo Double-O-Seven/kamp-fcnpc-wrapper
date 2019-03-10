@@ -2,6 +2,7 @@ package ch.leadrian.samp.kamp.fcnpcwrapper.service
 
 import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
 import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
+import ch.leadrian.samp.kamp.core.api.amx.OutputString
 import ch.leadrian.samp.kamp.core.api.constants.WeaponModel
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
@@ -20,13 +21,15 @@ internal object FCNPCServiceSpec : Spek({
 
     describe("getPluginVersion") {
         beforeEach {
-            every { fcnpcNativeFunctions.getPluginVersion(any(), any()) } returns true
-            // Cannot check result due to visibility of OutputString.value
-            fcnpcService.getPluginVersion(69)
+            every { fcnpcNativeFunctions.getPluginVersion(any(), 69) } answers {
+                firstArg<OutputString>().value = "v1"
+                true
+            }
         }
 
         it("should call fcnpcService.getPluginVersion") {
-            verify { fcnpcNativeFunctions.getPluginVersion(any(), 69) }
+            assertThat(fcnpcService.getPluginVersion(69))
+                    .isEqualTo("v1")
         }
     }
 
