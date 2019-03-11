@@ -25,13 +25,15 @@ import ch.leadrian.samp.kamp.core.api.entity.extension.Extendable
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 
 class FullyControllableNPC
 internal constructor(
         val name: String,
         private val nativeFunctions: FCNPCNativeFunctions,
-        combatFactory: FCNPCCombatFactory
+        combatFactory: FCNPCCombatFactory,
+        vehicleFactory: FCNPCVehicleFactory
 ) : AbstractDestroyable(), Entity<FullyControllableNPCId>, Extendable<FullyControllableNPC> {
 
     override val id: FullyControllableNPCId
@@ -52,6 +54,8 @@ internal constructor(
     val animation: FCNPCAnimation = FCNPCAnimation(this, nativeFunctions)
 
     val combat: FCNPCCombat = combatFactory.create(this)
+
+    val vehicle: FCNPCVehicle = vehicleFactory.create(this)
 
     val isSpawned: Boolean
         get() = nativeFunctions.isSpawned(id.value)
