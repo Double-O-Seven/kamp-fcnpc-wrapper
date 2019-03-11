@@ -1,12 +1,12 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.MapObjectTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.NoTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.PlayerMapObjectTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.PlayerTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.VehicleTarget
 import ch.leadrian.samp.kamp.core.api.constants.BulletHitType
+import ch.leadrian.samp.kamp.core.api.data.HitTarget
+import ch.leadrian.samp.kamp.core.api.data.MapObjectHitTarget
+import ch.leadrian.samp.kamp.core.api.data.NoHitTarget
+import ch.leadrian.samp.kamp.core.api.data.PlayerHitTarget
+import ch.leadrian.samp.kamp.core.api.data.PlayerMapObjectHitTarget
+import ch.leadrian.samp.kamp.core.api.data.VehicleHitTarget
 import ch.leadrian.samp.kamp.core.api.entity.MapObject
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.PlayerMapObject
@@ -43,7 +43,7 @@ internal class HitTargetResolverSpec : Spek({
                 }
             }
             val hitTarget by memoized {
-                PlayerTarget(player)
+                PlayerHitTarget(player)
             }
 
             it("should return player ID") {
@@ -60,7 +60,7 @@ internal class HitTargetResolverSpec : Spek({
                 }
             }
             val hitTarget by memoized {
-                VehicleTarget(vehicle)
+                VehicleHitTarget(vehicle)
             }
 
             it("should return vehicle ID") {
@@ -77,7 +77,7 @@ internal class HitTargetResolverSpec : Spek({
                 }
             }
             val hitTarget by memoized {
-                PlayerMapObjectTarget(playerMapObject)
+                PlayerMapObjectHitTarget(playerMapObject)
             }
 
             it("should return player map object ID") {
@@ -94,7 +94,7 @@ internal class HitTargetResolverSpec : Spek({
                 }
             }
             val hitTarget by memoized {
-                MapObjectTarget(mapObject)
+                MapObjectHitTarget(mapObject)
             }
 
             it("should return map object ID") {
@@ -104,7 +104,7 @@ internal class HitTargetResolverSpec : Spek({
         }
 
         context("no target") {
-            val hitTarget by memoized { NoTarget }
+            val hitTarget by memoized { NoHitTarget }
 
             it("should return 0") {
                 assertThat(hitTargetResolver.getHitId(hitTarget))
@@ -118,7 +118,7 @@ internal class HitTargetResolverSpec : Spek({
 
         context("hit type is PLAYER") {
             val player by memoized { mockk<Player>() }
-            lateinit var hitTarget: Target
+            lateinit var hitTarget: HitTarget
 
             beforeEach {
                 every { playerService.getPlayer(PlayerId.valueOf(hitId)) } returns player
@@ -127,13 +127,13 @@ internal class HitTargetResolverSpec : Spek({
 
             it("should return PlayerTarget") {
                 assertThat(hitTarget)
-                        .isEqualTo(PlayerTarget(player))
+                        .isEqualTo(PlayerHitTarget(player))
             }
         }
 
         context("hit type is VEHICLE") {
             val vehicle by memoized { mockk<Vehicle>() }
-            lateinit var hitTarget: Target
+            lateinit var hitTarget: HitTarget
 
             beforeEach {
                 every { vehicleService.getVehicle(VehicleId.valueOf(hitId)) } returns vehicle
@@ -142,13 +142,13 @@ internal class HitTargetResolverSpec : Spek({
 
             it("should return VehicleTarget") {
                 assertThat(hitTarget)
-                        .isEqualTo(VehicleTarget(vehicle))
+                        .isEqualTo(VehicleHitTarget(vehicle))
             }
         }
 
         context("hit type is PlayerMapObject") {
             val playerMapObject by memoized { mockk<PlayerMapObject>() }
-            lateinit var hitTarget: Target
+            lateinit var hitTarget: HitTarget
 
             beforeEach {
                 val playerMapObjectOwner = PlayerId.valueOf(69)
@@ -162,13 +162,13 @@ internal class HitTargetResolverSpec : Spek({
 
             it("should return PLAYER_OBJECT") {
                 assertThat(hitTarget)
-                        .isEqualTo(PlayerMapObjectTarget(playerMapObject))
+                        .isEqualTo(PlayerMapObjectHitTarget(playerMapObject))
             }
         }
 
         context("hit type is OBJECT") {
             val mapObject by memoized { mockk<MapObject>() }
-            lateinit var hitTarget: Target
+            lateinit var hitTarget: HitTarget
 
             beforeEach {
                 every { mapObjectService.getMapObject(MapObjectId.valueOf(hitId)) } returns mapObject
@@ -177,12 +177,12 @@ internal class HitTargetResolverSpec : Spek({
 
             it("should return MapObjectTarget") {
                 assertThat(hitTarget)
-                        .isEqualTo(MapObjectTarget(mapObject))
+                        .isEqualTo(MapObjectHitTarget(mapObject))
             }
         }
 
         context("hit type is NONE") {
-            lateinit var hitTarget: Target
+            lateinit var hitTarget: HitTarget
 
             beforeEach {
                 hitTarget = hitTargetResolver.getHitTarget(hitId, BulletHitType.NONE, PlayerId.INVALID)
@@ -190,7 +190,7 @@ internal class HitTargetResolverSpec : Spek({
 
             it("should return PlayerTarget") {
                 assertThat(hitTarget)
-                        .isEqualTo(NoTarget)
+                        .isEqualTo(NoHitTarget)
             }
         }
     }

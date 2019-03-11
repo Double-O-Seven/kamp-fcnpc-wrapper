@@ -1,12 +1,12 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.MapObjectTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.NoTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.PlayerMapObjectTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.PlayerTarget
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target.VehicleTarget
 import ch.leadrian.samp.kamp.core.api.constants.BulletHitType
+import ch.leadrian.samp.kamp.core.api.data.HitTarget
+import ch.leadrian.samp.kamp.core.api.data.MapObjectHitTarget
+import ch.leadrian.samp.kamp.core.api.data.NoHitTarget
+import ch.leadrian.samp.kamp.core.api.data.PlayerHitTarget
+import ch.leadrian.samp.kamp.core.api.data.PlayerMapObjectHitTarget
+import ch.leadrian.samp.kamp.core.api.data.VehicleHitTarget
 import ch.leadrian.samp.kamp.core.api.entity.id.MapObjectId
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerMapObjectId
@@ -26,30 +26,30 @@ constructor(
         private val mapObjectService: MapObjectService
 ) {
 
-    fun getHitId(hitTarget: Target): Int {
+    fun getHitId(hitTarget: HitTarget): Int {
         return when (hitTarget) {
-            is PlayerTarget -> hitTarget.player.id.value
-            is VehicleTarget -> hitTarget.vehicle.id.value
-            is MapObjectTarget -> hitTarget.mapObject.id.value
-            is PlayerMapObjectTarget -> hitTarget.playerMapObject.id.value
+            is PlayerHitTarget -> hitTarget.player.id.value
+            is VehicleHitTarget -> hitTarget.vehicle.id.value
+            is MapObjectHitTarget -> hitTarget.mapObject.id.value
+            is PlayerMapObjectHitTarget -> hitTarget.playerMapObject.id.value
             else -> 0
         }
     }
 
-    fun getHitTarget(hitId: Int, hitType: BulletHitType, playerMapObjectOwner: PlayerId): Target {
+    fun getHitTarget(hitId: Int, hitType: BulletHitType, playerMapObjectOwner: PlayerId): HitTarget {
         return when (hitType) {
-            BulletHitType.PLAYER -> PlayerTarget(playerService.getPlayer(PlayerId.valueOf(hitId)))
-            BulletHitType.VEHICLE -> VehicleTarget(vehicleService.getVehicle(VehicleId.valueOf(hitId)))
+            BulletHitType.PLAYER -> PlayerHitTarget(playerService.getPlayer(PlayerId.valueOf(hitId)))
+            BulletHitType.VEHICLE -> VehicleHitTarget(vehicleService.getVehicle(VehicleId.valueOf(hitId)))
             BulletHitType.PLAYER_OBJECT -> {
                 val player = playerService.getPlayer(playerMapObjectOwner)
                 val playerMapObject = playerMapObjectService.getPlayerMapObject(
                         player,
                         PlayerMapObjectId.valueOf(hitId)
                 )
-                PlayerMapObjectTarget(playerMapObject)
+                PlayerMapObjectHitTarget(playerMapObject)
             }
-            BulletHitType.OBJECT -> MapObjectTarget(mapObjectService.getMapObject(MapObjectId.valueOf(hitId)))
-            BulletHitType.NONE -> NoTarget
+            BulletHitType.OBJECT -> MapObjectHitTarget(mapObjectService.getMapObject(MapObjectId.valueOf(hitId)))
+            BulletHitType.NONE -> NoHitTarget
         }
     }
 

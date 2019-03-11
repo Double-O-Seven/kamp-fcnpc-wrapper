@@ -2,11 +2,11 @@ package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
 import ch.leadrian.samp.kamp.core.api.amx.MutableFloatCell
 import ch.leadrian.samp.kamp.core.api.amx.MutableIntCell
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener.Target
 import ch.leadrian.samp.kamp.core.api.constants.BulletHitType
 import ch.leadrian.samp.kamp.core.api.constants.FightingStyle
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
 import ch.leadrian.samp.kamp.core.api.constants.WeaponModel
+import ch.leadrian.samp.kamp.core.api.data.HitTarget
 import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
@@ -489,7 +489,7 @@ object FCNPCCombatSpec : Spek({
     }
 
     describe("triggerWeaponShot") {
-        lateinit var hitTarget: Target
+        lateinit var hitTarget: HitTarget
         val hitId = 69
 
         beforeEach {
@@ -584,7 +584,7 @@ object FCNPCCombatSpec : Spek({
     }
 
     describe("getClosestEntityInBetween") {
-        val hitTarget by memoized { mockk<Target>() }
+        val hitTarget by memoized { mockk<HitTarget>() }
         lateinit var nearbyTarget: NearbyTarget
 
         beforeEach {

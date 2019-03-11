@@ -1,7 +1,7 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.data
 
-import ch.leadrian.samp.kamp.core.api.callback.OnPlayerWeaponShotListener
 import ch.leadrian.samp.kamp.core.api.constants.WeaponModel
+import ch.leadrian.samp.kamp.core.api.data.PlayerHitTarget
 import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.EntityCheck
 import io.mockk.mockk
@@ -16,7 +16,7 @@ internal object WeaponShotParametersSpec : Spek({
             val weaponShotParameters by memoized {
                 WeaponShotParameters(
                         weapon = WeaponModel.M4,
-                        hitTarget = OnPlayerWeaponShotListener.Target.PlayerTarget(mockk()),
+                        hitTarget = PlayerHitTarget(mockk()),
                         coordinates = vector3DOf(1f, 2f, 3f),
                         betweenChecks = EnumSet.of(EntityCheck.PLAYER, EntityCheck.NPC)
                 )
