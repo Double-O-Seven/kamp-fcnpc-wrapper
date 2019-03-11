@@ -25,7 +25,7 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.util.EnumSet
 
-object FCNPCCombatSpec : Spek({
+internal object FCNPCCombatSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
     val playerService by memoized { mockk<PlayerService>() }
     val hitTargetResolver by memoized { mockk<HitTargetResolver>() }
