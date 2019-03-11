@@ -16,6 +16,8 @@ import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCSurfingFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 import io.mockk.every
 import io.mockk.mockk
@@ -28,6 +30,8 @@ import org.spekframework.spek2.style.specification.describe
 internal object FullyControllableNPCSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
     val fcnpcCombatFactory by memoized { mockk<FCNPCCombatFactory>(relaxed = true) }
+    val fcnpcVehicleFactory by memoized { mockk<FCNPCVehicleFactory>(relaxed = true) }
+    val fcnpcSurfingFactory by memoized { mockk<FCNPCSurfingFactory>(relaxed = true) }
 
     describe("constructor") {
         val name = "JonSnow"
@@ -36,7 +40,13 @@ internal object FullyControllableNPCSpec : Spek({
             val npcId = 69
             val npc by memoized {
                 every { fcnpcNativeFunctions.create(name) } returns npcId
-                FullyControllableNPC(name, fcnpcNativeFunctions, fcnpcCombatFactory)
+                FullyControllableNPC(
+                        name,
+                        fcnpcNativeFunctions,
+                        fcnpcCombatFactory,
+                        fcnpcVehicleFactory,
+                        fcnpcSurfingFactory
+                )
             }
 
             it("should initialize id") {
@@ -57,7 +67,13 @@ internal object FullyControllableNPCSpec : Spek({
 
             it("should throw exception") {
                 val caughtThrowable = catchThrowable {
-                    FullyControllableNPC(name, fcnpcNativeFunctions, fcnpcCombatFactory)
+                    FullyControllableNPC(
+                            name,
+                            fcnpcNativeFunctions,
+                            fcnpcCombatFactory,
+                            fcnpcVehicleFactory,
+                            fcnpcSurfingFactory
+                    )
                 }
 
                 assertThat(caughtThrowable)
@@ -73,7 +89,13 @@ internal object FullyControllableNPCSpec : Spek({
 
         val npc by memoized {
             every { fcnpcNativeFunctions.create(name) } returns npcId
-            FullyControllableNPC(name, fcnpcNativeFunctions, fcnpcCombatFactory)
+            FullyControllableNPC(
+                    name,
+                    fcnpcNativeFunctions,
+                    fcnpcCombatFactory,
+                    fcnpcVehicleFactory,
+                    fcnpcSurfingFactory
+            )
         }
 
         describe("isSpawned") {
