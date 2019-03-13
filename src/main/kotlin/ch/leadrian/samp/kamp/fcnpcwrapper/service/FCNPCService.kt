@@ -8,6 +8,8 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.PlaybackRecordFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,6 +17,7 @@ import javax.inject.Singleton
 class FCNPCService
 @Inject
 internal constructor(
+        private val playbackRecordFactory: PlaybackRecordFactory,
         private val nativeFunctions: FCNPCNativeFunctions
 ) {
 
@@ -86,5 +89,7 @@ internal constructor(
                 accuracy = accuracy.value
         )
     }
+
+    fun loadPlaybackRecord(file: String): PlaybackRecord = playbackRecordFactory.load(file)
 
 }

@@ -8,6 +8,8 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.PlaybackRecordFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,7 +19,8 @@ import org.spekframework.spek2.style.specification.describe
 
 internal object FCNPCServiceSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
-    val fcnpcService by memoized { FCNPCService(fcnpcNativeFunctions) }
+    val playbackRecordFactory by memoized { mockk<PlaybackRecordFactory>() }
+    val fcnpcService by memoized { FCNPCService(playbackRecordFactory, fcnpcNativeFunctions) }
 
     describe("getPluginVersion") {
         beforeEach {
@@ -286,6 +289,20 @@ internal object FCNPCServiceSpec : Spek({
         it("should return weapon info") {
             assertThat(fcnpcService.getDefaultWeaponInfo(WeaponModel.MINIGUN))
                     .isEqualTo(WeaponInfo(reloadTime = 123, shootTime = 456, clipSize = 789, accuracy = 69f))
+        }
+    }
+
+    describe("loadPlaybackRecord") {
+        val file = "my_npc.rec"
+        val playbackRecord by memoized { mockk<PlaybackRecord>() }
+
+        beforeEach {
+            every { playbackRecordFactory.load(file) } returns playbackRecord
+        }
+
+        it("should return playbackRecord from factory") {
+            assertThat(fcnpcService.loadPlaybackRecord(file))
+                    .isEqualTo(playbackRecord)
         }
     }
 })

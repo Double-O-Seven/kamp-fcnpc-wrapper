@@ -232,10 +232,10 @@ const int FCNPC_INVALID_RECORD_ID = -1;
 [native] bool FCNPC_StopPlayingPlayback(int npcid);
 [native] bool FCNPC_PausePlayingPlayback(int npcid);
 [native] bool FCNPC_ResumePlayingPlayback(int npcid);
-[native] bool FCNPC_LoadPlayingPlayback(string file);
+[native] int FCNPC_LoadPlayingPlayback(string file);
 [native] bool FCNPC_UnloadPlayingPlayback(int recordid);
 [native] bool FCNPC_SetPlayingPlaybackPath(int npcid, string path);
-[native] bool FCNPC_GetPlayingPlaybackPath(int npcid, string path, int size);
+[native] bool FCNPC_GetPlayingPlaybackPath(int npcid, [out] string path, int size);
 
 [native] bool FCNPC_OpenNode(int nodeid);
 [native] bool FCNPC_CloseNode(int nodeid);
