@@ -13,6 +13,7 @@ import ch.leadrian.samp.kamp.core.api.data.quaternionOf
 import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
+import ch.leadrian.samp.kamp.core.api.exception.AlreadyDestroyedException
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
@@ -86,7 +87,6 @@ internal object FullyControllableNPCSpec : Spek({
     describe("constructed NPC") {
         val name = "JonSnow"
         val npcId = 69
-
         val npc by memoized {
             every { fcnpcNativeFunctions.create(name) } returns npcId
             FullyControllableNPC(
@@ -96,6 +96,30 @@ internal object FullyControllableNPCSpec : Spek({
                     fcnpcVehicleFactory,
                     fcnpcSurfingFactory
             )
+        }
+
+        describe("id") {
+            context("NPC is not destroyed") {
+                it("should return record ID") {
+                    assertThat(npc.id.value)
+                            .isEqualTo(npcId)
+                }
+            }
+
+            context("NPC is destroyed") {
+                lateinit var caughtThrowable: Throwable
+
+                beforeEach {
+                    every { fcnpcNativeFunctions.destroy(any()) } returns true
+                    npc.destroy()
+                    caughtThrowable = catchThrowable { npc.id }
+                }
+
+                it("should throw exception") {
+                    assertThat(caughtThrowable)
+                            .isInstanceOf(AlreadyDestroyedException::class.java)
+                }
+            }
         }
 
         describe("isSpawned") {

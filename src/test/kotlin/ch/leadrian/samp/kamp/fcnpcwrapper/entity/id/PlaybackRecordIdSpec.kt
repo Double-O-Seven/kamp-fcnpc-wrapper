@@ -25,7 +25,7 @@ internal object PlaybackRecordIdSpec : Spek({
             }
         }
 
-        listOf(-1, 1000, 1001).forEach { value ->
+        listOf(-1000, 1000, 1001).forEach { value ->
             it("should create new PlaybackRecordId for value $value") {
                 val playbackRecordId = PlaybackRecordId.valueOf(value)
 

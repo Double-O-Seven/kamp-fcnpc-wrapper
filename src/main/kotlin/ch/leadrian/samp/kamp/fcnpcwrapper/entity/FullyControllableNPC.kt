@@ -22,6 +22,7 @@ import ch.leadrian.samp.kamp.core.api.entity.Entity
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.extension.EntityExtensionContainer
 import ch.leadrian.samp.kamp.core.api.entity.extension.Extendable
+import ch.leadrian.samp.kamp.core.api.entity.requireNotDestroyed
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
@@ -39,6 +40,7 @@ internal constructor(
 ) : AbstractDestroyable(), Entity<FullyControllableNPCId>, Extendable<FullyControllableNPC> {
 
     override val id: FullyControllableNPCId
+        get() = requireNotDestroyed { field }
 
     init {
         val npcId = nativeFunctions.create(name)

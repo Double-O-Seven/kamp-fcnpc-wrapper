@@ -1,5 +1,6 @@
 package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 
+import ch.leadrian.samp.kamp.core.api.exception.AlreadyDestroyedException
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCConstants
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
@@ -13,7 +14,7 @@ import org.spekframework.spek2.style.specification.describe
 
 internal object PlaybackRecordSpec : Spek({
 
-    val nativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
+    val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
 
     describe("init") {
         val file = "my_npc.rec"
@@ -23,8 +24,8 @@ internal object PlaybackRecordSpec : Spek({
             lateinit var playbackRecord: PlaybackRecord
 
             beforeEach {
-                every { nativeFunctions.loadPlayingPlayback(file) } returns recordId
-                playbackRecord = PlaybackRecord(file, nativeFunctions)
+                every { fcnpcNativeFunctions.loadPlayingPlayback(file) } returns recordId
+                playbackRecord = PlaybackRecord(file, fcnpcNativeFunctions)
             }
 
             it("should initialize playback record file") {
@@ -42,8 +43,8 @@ internal object PlaybackRecordSpec : Spek({
             lateinit var caughtThrowable: Throwable
 
             beforeEach {
-                every { nativeFunctions.loadPlayingPlayback(file) } returns FCNPCConstants.FCNPC_INVALID_RECORD_ID
-                caughtThrowable = catchThrowable { PlaybackRecord(file, nativeFunctions) }
+                every { fcnpcNativeFunctions.loadPlayingPlayback(file) } returns FCNPCConstants.FCNPC_INVALID_RECORD_ID
+                caughtThrowable = catchThrowable { PlaybackRecord(file, fcnpcNativeFunctions) }
             }
 
             it("should throw CreationFailedException") {
@@ -59,18 +60,42 @@ internal object PlaybackRecordSpec : Spek({
         lateinit var playbackRecord: PlaybackRecord
 
         beforeEach {
-            every { nativeFunctions.loadPlayingPlayback(any()) } returns recordId
-            playbackRecord = PlaybackRecord("my_npc.rec", nativeFunctions)
+            every { fcnpcNativeFunctions.loadPlayingPlayback(any()) } returns recordId
+            playbackRecord = PlaybackRecord("my_npc.rec", fcnpcNativeFunctions)
+        }
+
+        describe("id") {
+            context("record is not destroyed") {
+                it("should return record ID") {
+                    assertThat(playbackRecord.id.value)
+                            .isEqualTo(recordId)
+                }
+            }
+
+            context("record is destroyed") {
+                lateinit var caughtThrowable: Throwable
+
+                beforeEach {
+                    every { fcnpcNativeFunctions.unloadPlayingPlayback(any()) } returns true
+                    playbackRecord.destroy()
+                    caughtThrowable = catchThrowable { playbackRecord.id }
+                }
+
+                it("should throw exception") {
+                    assertThat(caughtThrowable)
+                            .isInstanceOf(AlreadyDestroyedException::class.java)
+                }
+            }
         }
 
         describe("destroy") {
             beforeEach {
-                every { nativeFunctions.unloadPlayingPlayback(any()) } returns true
+                every { fcnpcNativeFunctions.unloadPlayingPlayback(any()) } returns true
                 playbackRecord.destroy()
             }
 
             it("should call nativeFunctions.unloadPlayingPlayback") {
-                verify { nativeFunctions.unloadPlayingPlayback(recordId) }
+                verify { fcnpcNativeFunctions.unloadPlayingPlayback(recordId) }
             }
         }
     }
