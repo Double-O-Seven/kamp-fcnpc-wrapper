@@ -63,6 +63,8 @@ internal constructor(
 
     val surfing: FCNPCSurfing = surfingFactory.create(this)
 
+    val playback: Playback = Playback(this, nativeFunctions)
+
     val isSpawned: Boolean
         get() = nativeFunctions.isSpawned(id.value)
 
