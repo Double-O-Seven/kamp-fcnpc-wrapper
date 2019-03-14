@@ -3,6 +3,7 @@ package ch.leadrian.samp.kamp.fcnpcwrapper.entity
 import ch.leadrian.samp.kamp.core.api.amx.OutputString
 import ch.leadrian.samp.kamp.core.api.data.Quaternion
 import ch.leadrian.samp.kamp.core.api.data.Vector3D
+import ch.leadrian.samp.kamp.core.api.data.quaternionOf
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCConstants
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.exception.PlaybackFailedException
@@ -13,7 +14,19 @@ internal constructor(
         private val nativeFunctions: FCNPCNativeFunctions
 ) : HasFullyControllableNPC {
 
-    fun start(file: String, autoUnload: Boolean, delta: Vector3D, quaternion: Quaternion) {
+    private companion object {
+
+        val DEFAULT_PLAYBACK_QUATERNION = quaternionOf(0f, 0f, 0f, 0f)
+
+    }
+
+    @JvmOverloads
+    fun start(
+            file: String,
+            autoUnload: Boolean = false,
+            delta: Vector3D = Vector3D.ORIGIN,
+            quaternion: Quaternion = DEFAULT_PLAYBACK_QUATERNION
+    ) {
         val success = nativeFunctions.startPlayingPlayback(
                 npcid = npc.id.value,
                 file = file,
@@ -32,7 +45,12 @@ internal constructor(
         }
     }
 
-    fun start(playbackRecord: PlaybackRecord, delta: Vector3D, quaternion: Quaternion) {
+    @JvmOverloads
+    fun start(
+            playbackRecord: PlaybackRecord,
+            delta: Vector3D = Vector3D.ORIGIN,
+            quaternion: Quaternion = DEFAULT_PLAYBACK_QUATERNION
+    ) {
         val success = nativeFunctions.startPlayingPlayback(
                 npcid = npc.id.value,
                 file = "",
