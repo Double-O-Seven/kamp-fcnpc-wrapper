@@ -65,6 +65,8 @@ internal constructor(
 
     val playback: Playback = Playback(this, nativeFunctions)
 
+    val movement: Movement = Movement(this, nativeFunctions)
+
     val isSpawned: Boolean
         get() = nativeFunctions.isSpawned(id.value)
 
