@@ -10,6 +10,7 @@ import ch.leadrian.samp.kamp.core.api.data.Location
 import ch.leadrian.samp.kamp.core.api.data.PlayerKeys
 import ch.leadrian.samp.kamp.core.api.data.Position
 import ch.leadrian.samp.kamp.core.api.data.Quaternion
+import ch.leadrian.samp.kamp.core.api.data.Vector2D
 import ch.leadrian.samp.kamp.core.api.data.Vector3D
 import ch.leadrian.samp.kamp.core.api.data.angledLocationOf
 import ch.leadrian.samp.kamp.core.api.data.locationOf
@@ -259,6 +260,20 @@ internal constructor(
     fun giveHealth(health: Float): Float = nativeFunctions.giveHealth(id.value, health)
 
     fun giveArmour(armour: Float): Float = nativeFunctions.giveArmour(id.value, armour)
+
+    fun giveCoordinates(offset: Vector3D) {
+        nativeFunctions.givePosition(id.value, offset.x, offset.y, offset.z)
+    }
+
+    fun giveAngle(angle: Float): Float = nativeFunctions.giveAngle(id.value, angle)
+
+    fun setAngleTo(coordinates: Vector2D) {
+        nativeFunctions.setAngleToPos(id.value, coordinates.x, coordinates.y)
+    }
+
+    fun setAngleTo(player: Player) {
+        nativeFunctions.setAngleToPlayer(id.value, player.id.value)
+    }
 
     override fun onDestroy() {
         extensions.destroy()

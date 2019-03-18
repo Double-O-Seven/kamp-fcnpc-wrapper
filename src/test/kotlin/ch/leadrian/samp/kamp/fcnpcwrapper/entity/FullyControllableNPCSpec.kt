@@ -10,6 +10,7 @@ import ch.leadrian.samp.kamp.core.api.data.locationOf
 import ch.leadrian.samp.kamp.core.api.data.playerKeysOf
 import ch.leadrian.samp.kamp.core.api.data.positionOf
 import ch.leadrian.samp.kamp.core.api.data.quaternionOf
+import ch.leadrian.samp.kamp.core.api.data.vector2DOf
 import ch.leadrian.samp.kamp.core.api.data.vector3DOf
 import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
@@ -812,6 +813,58 @@ internal object FullyControllableNPCSpec : Spek({
             it("should return updated armour") {
                 assertThat(npc.giveArmour(13.37f))
                         .isEqualTo(69f)
+            }
+        }
+
+        describe("giveCoordinates") {
+            beforeEach {
+                every { fcnpcNativeFunctions.givePosition(any(), any(), any(), any()) } returns true
+                npc.giveCoordinates(vector3DOf(1f, 2f, 3f))
+            }
+
+            it("should call fcnpcNativeFunctions.givePosition") {
+                verify { fcnpcNativeFunctions.givePosition(npcId, 1f, 2f, 3f) }
+            }
+        }
+
+        describe("giveAngle") {
+            beforeEach {
+                every { fcnpcNativeFunctions.giveAngle(npcId, 0.815f) } returns 13.37f
+            }
+
+            it("should return new angle") {
+                assertThat(npc.giveAngle(0.815f))
+                        .isEqualTo(13.37f)
+            }
+        }
+
+        describe("setAngleTo") {
+            context("target is coordinates") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setAngleToPos(any(), any(), any()) } returns true
+                    npc.setAngleTo(vector2DOf(1f, 2f))
+                }
+
+                it("should call fcnpcNativeFunctions.setAngleToPos") {
+                    verify { fcnpcNativeFunctions.setAngleToPos(npcId, 1f, 2f) }
+                }
+            }
+
+            context("target is player") {
+                val playerId = 1234
+                val player by memoized {
+                    mockk<Player> {
+                        every { id } returns PlayerId.valueOf(playerId)
+                    }
+                }
+                beforeEach {
+                    every { fcnpcNativeFunctions.setAngleToPlayer(any(), any()) } returns true
+                    npc.setAngleTo(player)
+                }
+
+                it("should call fcnpcNativeFunctions.setAngleToPlayer") {
+                    verify { fcnpcNativeFunctions.setAngleToPlayer(npcId, playerId) }
+                }
             }
         }
 

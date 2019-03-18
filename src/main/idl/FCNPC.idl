@@ -97,7 +97,7 @@ const int FCNPC_INVALID_RECORD_ID = -1;
 [native] bool FCNPC_IsStreamedInForAnyone(int npcid);
 
 [native] bool FCNPC_SetPosition(int npcid, float x, float y, float z);
-[native] int FCNPC_GivePosition(int npcid, float x, float y, float z);
+[native] bool FCNPC_GivePosition(int npcid, float x, float y, float z);
 [native] bool FCNPC_GetPosition(int npcid, [out] float x, [out] float y, [out] float z);
 [native] bool FCNPC_SetAngle(int npcid, float angle);
 [native] float FCNPC_GiveAngle(int npcid, float angle);
