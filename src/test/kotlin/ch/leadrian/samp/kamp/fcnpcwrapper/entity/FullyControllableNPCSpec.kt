@@ -638,6 +638,36 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
 
+        describe("isPlayingNode") {
+            listOf(true, false).forEach { isPlayingNode ->
+                context("fcnpcNativeFunctions.isPlayingNode returns $isPlayingNode") {
+                    beforeEach {
+                        every { fcnpcNativeFunctions.isPlayingNode(npcId) } returns isPlayingNode
+                    }
+
+                    it("should return $isPlayingNode") {
+                        assertThat(npc.isPlayingNode)
+                                .isEqualTo(isPlayingNode)
+                    }
+                }
+            }
+        }
+
+        describe("isPlayingNodePaused") {
+            listOf(true, false).forEach { isPlayingNodePaused ->
+                context("fcnpcNativeFunctions.isPlayingNodePaused returns $isPlayingNodePaused") {
+                    beforeEach {
+                        every { fcnpcNativeFunctions.isPlayingNodePaused(npcId) } returns isPlayingNodePaused
+                    }
+
+                    it("should return $isPlayingNodePaused") {
+                        assertThat(npc.isPlayingNodePaused)
+                                .isEqualTo(isPlayingNodePaused)
+                    }
+                }
+            }
+        }
+
         describe("spawn") {
             beforeEach {
                 every { fcnpcNativeFunctions.spawn(any(), any(), any(), any(), any()) } returns true
@@ -857,6 +887,7 @@ internal object FullyControllableNPCSpec : Spek({
                         every { id } returns PlayerId.valueOf(playerId)
                     }
                 }
+
                 beforeEach {
                     every { fcnpcNativeFunctions.setAngleToPlayer(any(), any()) } returns true
                     npc.setAngleTo(player)
@@ -865,6 +896,39 @@ internal object FullyControllableNPCSpec : Spek({
                 it("should call fcnpcNativeFunctions.setAngleToPlayer") {
                     verify { fcnpcNativeFunctions.setAngleToPlayer(npcId, playerId) }
                 }
+            }
+        }
+
+        describe("stopPlayingNode") {
+            beforeEach {
+                every { fcnpcNativeFunctions.stopPlayingNode(any()) } returns true
+                npc.stopPlayingNode()
+            }
+
+            it("should call fcnpcNativeFunctions.stopPlayingNode") {
+                verify { fcnpcNativeFunctions.stopPlayingNode(npcId) }
+            }
+        }
+
+        describe("pausePlayingNode") {
+            beforeEach {
+                every { fcnpcNativeFunctions.pausePlayingNode(any()) } returns true
+                npc.pausePlayingNode()
+            }
+
+            it("should call fcnpcNativeFunctions.pausePlayingNode") {
+                verify { fcnpcNativeFunctions.pausePlayingNode(npcId) }
+            }
+        }
+
+        describe("resumePlayingNode") {
+            beforeEach {
+                every { fcnpcNativeFunctions.resumePlayingNode(any()) } returns true
+                npc.resumePlayingNode()
+            }
+
+            it("should call fcnpcNativeFunctions.resumePlayingNode") {
+                verify { fcnpcNativeFunctions.resumePlayingNode(npcId) }
             }
         }
 

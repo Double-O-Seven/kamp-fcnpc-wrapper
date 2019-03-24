@@ -204,6 +204,12 @@ internal constructor(
             nativeFunctions.setSpecialAction(npcid = id.value, actionid = value.value)
         }
 
+    val isPlayingNode: Boolean
+        get() = nativeFunctions.isPlayingNode(id.value)
+
+    val isPlayingNodePaused: Boolean
+        get() = nativeFunctions.isPlayingNodePaused(id.value)
+
     fun spawn(skinModel: SkinModel, coordinates: Vector3D) {
         nativeFunctions.spawn(
                 npcid = id.value,
@@ -273,6 +279,18 @@ internal constructor(
 
     fun setAngleTo(player: Player) {
         nativeFunctions.setAngleToPlayer(id.value, player.id.value)
+    }
+
+    fun stopPlayingNode() {
+        nativeFunctions.stopPlayingNode(id.value)
+    }
+
+    fun pausePlayingNode() {
+        nativeFunctions.pausePlayingNode(id.value)
+    }
+
+    fun resumePlayingNode() {
+        nativeFunctions.resumePlayingNode(id.value)
     }
 
     override fun onDestroy() {
