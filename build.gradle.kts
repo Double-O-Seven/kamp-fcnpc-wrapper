@@ -18,6 +18,7 @@ buildscript {
 
 plugins {
     kotlin("jvm") version "1.3.11"
+    kotlin("kapt") version "1.3.11"
     `java-library`
     `maven-publish`
     maven
@@ -47,8 +48,10 @@ configure<PluginWrapperGeneratorExtension> {
 }
 
 dependencies {
-    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = "1.0.0-rc6-5-g1fd1517")
-    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = "1.0.0-rc6-5-g1fd1517")
+    val kampVersion = "1.0.0-rc6-7-gce63bbf"
+
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = kampVersion)
+    api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = kampVersion)
 
     api(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "1.3.11")
     api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.3.11")
@@ -63,6 +66,8 @@ dependencies {
 
     testRuntimeOnly(group = "org.spekframework.spek2", name = "spek-runner-junit5", version = "2.0.1")
     testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = "5.4.0")
+
+    kapt(group = "ch.leadrian.samp.kamp", name = "kamp-annotation-processor", version = kampVersion)
 }
 
 val gitVersion: Closure<String> by extra
