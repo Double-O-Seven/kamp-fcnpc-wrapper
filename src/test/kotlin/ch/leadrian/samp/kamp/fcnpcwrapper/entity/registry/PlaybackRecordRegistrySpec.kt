@@ -7,12 +7,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
-internal object PlaybackRecordEntityRegistrySpec : Spek({
+internal object PlaybackRecordRegistrySpec : Spek({
 
     describe("capacity") {
         val playerService by memoized { mockk<PlayerService>() }
-        val playbackRecordEntityRegistry by memoized {
-            PlaybackRecordEntityRegistry(
+        val playbackRecordRegistry by memoized {
+            PlaybackRecordRegistry(
                     playerService
             )
         }
@@ -22,7 +22,7 @@ internal object PlaybackRecordEntityRegistrySpec : Spek({
         }
 
         it("should be expected value") {
-            assertThat(playbackRecordEntityRegistry.capacity)
+            assertThat(playbackRecordRegistry.capacity)
                     .isEqualTo(50)
         }
     }

@@ -6,7 +6,7 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.PlaybackRecordId
 import javax.inject.Inject
 
-internal class PlaybackRecordEntityRegistry
+internal class PlaybackRecordRegistry
 @Inject
 constructor(playerService: PlayerService) :
         EntityRegistry<PlaybackRecord, PlaybackRecordId>(arrayOfNulls(playerService.getMaxPlayers()))

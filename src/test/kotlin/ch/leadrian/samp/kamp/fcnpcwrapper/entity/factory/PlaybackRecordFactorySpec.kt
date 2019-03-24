@@ -2,7 +2,7 @@ package ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory
 
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
-import ch.leadrian.samp.kamp.fcnpcwrapper.entity.registry.PlaybackRecordEntityRegistry
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.registry.PlaybackRecordRegistry
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -13,16 +13,16 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 internal object PlaybackRecordFactorySpec : Spek({
-    val playbackRecordEntityRegistry by memoized { mockk<PlaybackRecordEntityRegistry>() }
+    val playbackRecordRegistry by memoized { mockk<PlaybackRecordRegistry>() }
     val nativeFunctions by memoized { mockk<FCNPCNativeFunctions>(relaxed = true) }
-    val playbackRecordFactory by memoized { PlaybackRecordFactory(playbackRecordEntityRegistry, nativeFunctions) }
+    val playbackRecordFactory by memoized { PlaybackRecordFactory(playbackRecordRegistry, nativeFunctions) }
 
     describe("load") {
         lateinit var playbackRecord: PlaybackRecord
         val file = "my_npc.rec"
 
         beforeEach {
-            every { playbackRecordEntityRegistry.register(any()) } just Runs
+            every { playbackRecordRegistry.register(any()) } just Runs
             playbackRecord = playbackRecordFactory.load(file)
         }
 
@@ -32,17 +32,17 @@ internal object PlaybackRecordFactorySpec : Spek({
         }
 
         it("should register playback record in registry") {
-            verify { playbackRecordEntityRegistry.register(playbackRecord) }
+            verify { playbackRecordRegistry.register(playbackRecord) }
         }
 
         context("playbackRecord.onDestroy is called") {
             beforeEach {
-                every { playbackRecordEntityRegistry.unregister(any()) } just Runs
+                every { playbackRecordRegistry.unregister(any()) } just Runs
                 playbackRecord.destroy()
             }
 
             it("should unregister playbackRecord in registry") {
-                verify { playbackRecordEntityRegistry.unregister(playbackRecord) }
+                verify { playbackRecordRegistry.unregister(playbackRecord) }
             }
         }
     }
