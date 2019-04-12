@@ -258,7 +258,7 @@ const int FCNPC_INVALID_RECORD_ID = -1;
 [native] int FCNPC_AddPointToMovePath(int pathid, float x, float y, float z);
 [native] bool FCNPC_RemovePointFromMovePath(int pathid, int pointid);
 [native] bool FCNPC_IsValidMovePathPoint(int pathid, int pointid);
-[native] int FCNPC_GetMovePathPoint(int pathid, int pointid, [out] float x, [out] float y, [out] float z);
+[native] bool FCNPC_GetMovePathPoint(int pathid, int pointid, [out] float x, [out] float y, [out] float z);
 [native] int FCNPC_GetNumberMovePathPoint(int pathid);
 [native] bool FCNPC_GoByMovePath(int npcid, int pathid, int pointid = 0, int type = FCNPC_MOVE_TYPE_AUTO, float speed = FCNPC_MOVE_SPEED_AUTO, int mode = FCNPC_MOVE_MODE_AUTO, int pathfinding = FCNPC_MOVE_PATHFINDING_AUTO, float radius = 0.0, bool set_angle = true, float min_distance = 0.0);
 
