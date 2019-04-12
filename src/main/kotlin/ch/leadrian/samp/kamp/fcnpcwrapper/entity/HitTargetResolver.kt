@@ -40,17 +40,16 @@ constructor(
         return when (hitType) {
             BulletHitType.PLAYER -> PlayerHitTarget(playerService.getPlayer(PlayerId.valueOf(hitId)))
             BulletHitType.VEHICLE -> VehicleHitTarget(vehicleService.getVehicle(VehicleId.valueOf(hitId)))
-            BulletHitType.PLAYER_OBJECT -> {
-                val player = playerService.getPlayer(playerMapObjectOwner)
-                val playerMapObject = playerMapObjectService.getPlayerMapObject(
-                        player,
-                        PlayerMapObjectId.valueOf(hitId)
-                )
-                PlayerMapObjectHitTarget(playerMapObject)
-            }
+            BulletHitType.PLAYER_OBJECT -> getPlayerMapObjectHitTarget(playerMapObjectOwner, hitId)
             BulletHitType.OBJECT -> MapObjectHitTarget(mapObjectService.getMapObject(MapObjectId.valueOf(hitId)))
             BulletHitType.NONE -> NoHitTarget
         }
+    }
+
+    private fun getPlayerMapObjectHitTarget(playerMapObjectOwner: PlayerId, hitId: Int): PlayerMapObjectHitTarget {
+        val player = playerService.getPlayer(playerMapObjectOwner)
+        val playerMapObject = playerMapObjectService.getPlayerMapObject(player, PlayerMapObjectId.valueOf(hitId))
+        return PlayerMapObjectHitTarget(playerMapObject)
     }
 
 }
