@@ -27,6 +27,7 @@ import ch.leadrian.samp.kamp.core.api.entity.requireNotDestroyed
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.GoByMovePathParameters
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCSurfingFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
@@ -312,6 +313,25 @@ internal constructor(
 
     fun hideInTabListForPlayer(player: Player) {
         nativeFunctions.hideInTabListForPlayer(npcid = id.value, forplayerid = player.id.value)
+    }
+
+    @JvmOverloads
+    fun goByMovePath(
+            movePathPoint: MovePathPoint,
+            parameters: GoByMovePathParameters = GoByMovePathParameters.DEFAULT
+    ) {
+        nativeFunctions.goByMovePath(
+                npcid = id.value,
+                pathid = movePathPoint.movePath.id.value,
+                pointid = movePathPoint.id.value,
+                type = parameters.type.value,
+                speed = parameters.speed.value,
+                mode = parameters.mode.value,
+                pathfinding = parameters.pathFinding.value,
+                radius = parameters.radius,
+                set_angle = parameters.setAngle,
+                min_distance = parameters.minDistance
+        )
     }
 
     override fun onDestroy() {

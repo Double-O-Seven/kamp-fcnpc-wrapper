@@ -18,10 +18,17 @@ import ch.leadrian.samp.kamp.core.api.exception.AlreadyDestroyedException
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
+import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
+import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveSpeed
+import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveType
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.GoByMovePathParameters
+import ch.leadrian.samp.kamp.fcnpcwrapper.data.GoToParameters
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCSurfingFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.MovePathId
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.MovePathPointId
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,6 +36,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
+import java.util.Arrays
+import java.util.function.Function
+import java.util.stream.Stream
+import kotlin.streams.toList
 
 internal object FullyControllableNPCSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
@@ -1017,6 +1028,59 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
 
+        describe("goByMovePath") {
+            getGoByMovePathParameters().forEach { parameters ->
+                context("parameters are set to $parameters") {
+                    val movePathId = 1337
+                    val movePathPointId = 69
+                    val movePathPoint by memoized {
+                        val movePath = mockk<MovePath> {
+                            every { id } returns MovePathId.valueOf(movePathId)
+                        }
+                        mockk<MovePathPoint> {
+                            every { id } returns MovePathPointId.valueOf(movePathPointId)
+                            every { this@mockk.movePath } returns movePath
+                        }
+                    }
+
+                    beforeEach {
+                        every {
+                            fcnpcNativeFunctions.goByMovePath(
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any(),
+                                    any()
+                            )
+                        } returns true
+                        npc.goByMovePath(movePathPoint, parameters)
+                    }
+
+                    it("should call fcnpcNativeFunctions.goByMovePath") {
+                        verify {
+                            fcnpcNativeFunctions.goByMovePath(
+                                    npcid = npcId,
+                                    pathid = movePathId,
+                                    pointid = movePathPointId,
+                                    type = parameters.type.value,
+                                    speed = parameters.speed.value,
+                                    mode = parameters.mode.value,
+                                    pathfinding = parameters.pathFinding.value,
+                                    radius = parameters.radius,
+                                    set_angle = parameters.setAngle,
+                                    min_distance = parameters.minDistance
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         describe("destroy") {
             beforeEach {
                 every { fcnpcNativeFunctions.destroy(any()) } returns true
@@ -1034,3 +1098,16 @@ internal object FullyControllableNPCSpec : Spek({
         }
     }
 })
+
+fun getGoByMovePathParameters(): List<GoByMovePathParameters> {
+    return Stream
+            .of(
+                    Arrays.stream(MoveType.values()).map { GoByMovePathParameters().copy(type = it) },
+                    Arrays.stream(MoveSpeed.values()).map { GoByMovePathParameters().copy(speed = it) },
+                    Arrays.stream(MoveMode.values()).map { GoByMovePathParameters().copy(mode = it) },
+                    Arrays.stream(MovePathFinding.values()).map { GoByMovePathParameters().copy(pathFinding = it) },
+                    Stream.of(true, false).map { GoByMovePathParameters().copy(setAngle = it) }
+            )
+            .flatMap(Function.identity())
+            .toList()
+}

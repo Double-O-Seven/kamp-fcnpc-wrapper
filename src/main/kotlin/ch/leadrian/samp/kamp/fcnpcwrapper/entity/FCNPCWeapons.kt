@@ -90,7 +90,8 @@ class FCNPCWeapons internal constructor(
     fun getAccuracy(weapon: WeaponModel): Float =
             nativeFunctions.getWeaponAccuracy(npcid = npc.id.value, weaponid = weapon.value)
 
-    fun setInfo(weapon: WeaponModel, info: WeaponInfo) {
+    @JvmOverloads
+    fun setInfo(weapon: WeaponModel, info: WeaponInfo = WeaponInfo.DEFAULT) {
         nativeFunctions.setWeaponInfo(
                 npcid = npc.id.value,
                 weaponid = weapon.value,
