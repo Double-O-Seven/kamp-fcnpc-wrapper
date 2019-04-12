@@ -20,8 +20,8 @@ internal constructor(
 ) : Entity<NodeId>, AutoCloseable {
 
     init {
-        if (id.value !in 0 until FCNPCConstants.FCNPC_MAX_NODES) {
-            throw IllegalArgumentException("Invalid node ID: ${id.value}")
+        require(id.value in 0 until FCNPCConstants.FCNPC_MAX_NODES) {
+            "Invalid node ID: ${id.value}"
         }
     }
 
@@ -78,8 +78,8 @@ internal constructor(
 
     fun setPoint(pointId: Int) {
         requireOpen {
-            if (pointId !in 0 until pointCount) {
-                throw IllegalArgumentException("point ID $pointId is not a valid point for node ${id.value} with $pointCount points")
+            require(pointId in 0 until pointCount) {
+                "point ID $pointId is not a valid point for node ${id.value} with $pointCount points"
             }
             nativeFunctions.setNodePoint(nodeid = id.value, pointid = pointId)
         }
