@@ -26,6 +26,7 @@ import ch.leadrian.samp.kamp.core.api.entity.extension.Extendable
 import ch.leadrian.samp.kamp.core.api.entity.requireNotDestroyed
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
+import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCSurfingFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
@@ -210,6 +211,18 @@ internal constructor(
     val isPlayingNodePaused: Boolean
         get() = nativeFunctions.isPlayingNodePaused(id.value)
 
+    var moveMode: MoveMode
+        get() = MoveMode[nativeFunctions.getMoveMode(id.value)]
+        set(value) {
+            nativeFunctions.setMoveMode(npcid = id.value, mode = value.value)
+        }
+
+    var minHeightCallbackThreshold: Float
+        get() = nativeFunctions.getMinHeightPosCall(id.value)
+        set(value) {
+            nativeFunctions.setMinHeightPosCall(id.value, value)
+        }
+
     fun spawn(skinModel: SkinModel, coordinates: Vector3D) {
         nativeFunctions.spawn(
                 npcid = id.value,
@@ -291,6 +304,14 @@ internal constructor(
 
     fun resumePlayingNode() {
         nativeFunctions.resumePlayingNode(id.value)
+    }
+
+    fun showInTabListForPlayer(player: Player) {
+        nativeFunctions.showInTabListForPlayer(npcid = id.value, forplayerid = player.id.value)
+    }
+
+    fun hideInTabListForPlayer(player: Player) {
+        nativeFunctions.hideInTabListForPlayer(npcid = id.value, forplayerid = player.id.value)
     }
 
     override fun onDestroy() {

@@ -17,6 +17,7 @@ import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
 import ch.leadrian.samp.kamp.core.api.exception.AlreadyDestroyedException
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
+import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCSurfingFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
@@ -668,6 +669,54 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
 
+        describe("moveMode") {
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setMoveMode(any(), any()) } returns true
+                    npc.moveMode = MoveMode.COL_ANDREAS
+                }
+
+                it("should call fcnpcNativeFunctions.setMoveMode") {
+                    verify { fcnpcNativeFunctions.setMoveMode(npcid = npcId, mode = MoveMode.COL_ANDREAS.value) }
+                }
+            }
+
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getMoveMode(npcId) } returns MoveMode.COL_ANDREAS.value
+                }
+
+                it("should return move mode") {
+                    assertThat(npc.moveMode)
+                            .isEqualTo(MoveMode.COL_ANDREAS)
+                }
+            }
+        }
+
+        describe("minHeightCallbackThreshold") {
+            describe("setter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.setMinHeightPosCall(any(), any()) } returns true
+                    npc.minHeightCallbackThreshold = 13.37f
+                }
+
+                it("should call fcnpcNativeFunctions.setMinHeightPosCall") {
+                    verify { fcnpcNativeFunctions.setMinHeightPosCall(npcId, 13.37f) }
+                }
+            }
+
+            describe("getter") {
+                beforeEach {
+                    every { fcnpcNativeFunctions.getMinHeightPosCall(npcId) } returns 0.815f
+                }
+
+                it("should return min height callback threshold") {
+                    assertThat(npc.minHeightCallbackThreshold)
+                            .isEqualTo(0.815f)
+                }
+            }
+        }
+
         describe("spawn") {
             beforeEach {
                 every { fcnpcNativeFunctions.spawn(any(), any(), any(), any(), any()) } returns true
@@ -929,6 +978,42 @@ internal object FullyControllableNPCSpec : Spek({
 
             it("should call fcnpcNativeFunctions.resumePlayingNode") {
                 verify { fcnpcNativeFunctions.resumePlayingNode(npcId) }
+            }
+        }
+
+        describe("showInTabListForPlayer") {
+            val playerId = 1337
+            val player by memoized {
+                mockk<Player> {
+                    every { id } returns PlayerId.valueOf(playerId)
+                }
+            }
+
+            beforeEach {
+                every { fcnpcNativeFunctions.showInTabListForPlayer(any(), any()) } returns true
+                npc.showInTabListForPlayer(player)
+            }
+
+            it("should call fcnpcNativeFunctions.showInTabListForPlayer") {
+                verify { fcnpcNativeFunctions.showInTabListForPlayer(npcid = npcId, forplayerid = playerId) }
+            }
+        }
+
+        describe("hideInTabListForPlayer") {
+            val playerId = 1337
+            val player by memoized {
+                mockk<Player> {
+                    every { id } returns PlayerId.valueOf(playerId)
+                }
+            }
+
+            beforeEach {
+                every { fcnpcNativeFunctions.hideInTabListForPlayer(any(), any()) } returns true
+                npc.hideInTabListForPlayer(player)
+            }
+
+            it("should call fcnpcNativeFunctions.hideInTabListForPlayer") {
+                verify { fcnpcNativeFunctions.hideInTabListForPlayer(npcid = npcId, forplayerid = playerId) }
             }
         }
 
