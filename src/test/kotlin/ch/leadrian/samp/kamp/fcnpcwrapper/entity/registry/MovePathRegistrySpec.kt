@@ -4,16 +4,16 @@ import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
-internal object PlaybackRecordRegistrySpec : Spek({
+internal object MovePathRegistrySpec : Spek({
 
     describe("capacity") {
-        val playbackRecordRegistry by memoized {
-            PlaybackRecordRegistry(50)
+        val movePathRegistry by memoized {
+            MovePathRegistry(65536)
         }
 
         it("should be expected value") {
-            assertThat(playbackRecordRegistry.capacity)
-                    .isEqualTo(50)
+            assertThat(movePathRegistry.capacity)
+                    .isEqualTo(65536)
         }
     }
 

@@ -57,6 +57,7 @@ dependencies {
     api(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.3.11")
     api(group = "com.google.guava", name = "guava", version = "27.0.1-jre")
     api(group = "com.google.inject", name = "guice", version = "4.2.2")
+    api(group = "com.netflix.governator", name = "governator", version = "1.17.5")
     api(group = "javax.inject", name = "javax.inject", version = "1")
 
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = "5.4.0")

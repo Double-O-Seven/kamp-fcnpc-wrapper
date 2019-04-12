@@ -17,7 +17,7 @@ constructor(
         val playbackRecord = PlaybackRecord(file, nativeFunctions)
         playerRecordRegistry.register(playbackRecord)
         playbackRecord.onDestroy {
-            playerRecordRegistry.unregister(playbackRecord)
+            playerRecordRegistry.unregister(this)
         }
         return playbackRecord
     }

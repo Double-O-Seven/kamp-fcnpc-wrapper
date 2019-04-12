@@ -4,5 +4,10 @@ import ch.leadrian.samp.kamp.core.runtime.entity.registry.EntityRegistry
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCConstants
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.Node
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.NodeId
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class NodeRegistry : EntityRegistry<Node, NodeId>(arrayOfNulls(FCNPCConstants.FCNPC_MAX_NODES))
+@Singleton
+internal class NodeRegistry
+@Inject
+constructor() : EntityRegistry<Node, NodeId>(arrayOfNulls(FCNPCConstants.FCNPC_MAX_NODES))
