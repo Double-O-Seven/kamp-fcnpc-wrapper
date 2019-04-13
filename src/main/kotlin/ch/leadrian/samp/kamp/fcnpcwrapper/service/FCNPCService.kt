@@ -8,8 +8,14 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.FullyControllableNPC
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.MovePath
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.Node
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FullyControllableNPCFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.MovePathFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.PlaybackRecordFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.NodeId
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +23,9 @@ import javax.inject.Singleton
 class FCNPCService
 @Inject
 internal constructor(
+        private val fullyControllableNPCFactory: FullyControllableNPCFactory,
+        private val nodeLoader: NodeLoader,
+        private val movePathFactory: MovePathFactory,
         private val playbackRecordFactory: PlaybackRecordFactory,
         private val nativeFunctions: FCNPCNativeFunctions
 ) {
@@ -91,5 +100,11 @@ internal constructor(
     }
 
     fun loadPlaybackRecord(file: String): PlaybackRecord = playbackRecordFactory.load(file)
+
+    fun createNPC(name: String): FullyControllableNPC = fullyControllableNPCFactory.create(name)
+
+    fun loadNode(nodeId: NodeId): Node = nodeLoader.load(nodeId)
+
+    fun createMovePath(): MovePath = movePathFactory.create()
 
 }

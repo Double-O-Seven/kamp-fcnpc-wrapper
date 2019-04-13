@@ -8,8 +8,14 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.WeaponInfo
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.FullyControllableNPC
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.MovePath
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.Node
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FullyControllableNPCFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.MovePathFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.PlaybackRecordFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.NodeId
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,9 +24,20 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 internal object FCNPCServiceSpec : Spek({
+    val fullyControllableNPCFactory by memoized { mockk<FullyControllableNPCFactory>() }
+    val nodeLoader by memoized { mockk<NodeLoader>() }
+    val movePathFactory by memoized { mockk<MovePathFactory>() }
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
     val playbackRecordFactory by memoized { mockk<PlaybackRecordFactory>() }
-    val fcnpcService by memoized { FCNPCService(playbackRecordFactory, fcnpcNativeFunctions) }
+    val fcnpcService by memoized {
+        FCNPCService(
+                fullyControllableNPCFactory,
+                nodeLoader,
+                movePathFactory,
+                playbackRecordFactory,
+                fcnpcNativeFunctions
+        )
+    }
 
     describe("getPluginVersion") {
         beforeEach {
@@ -303,6 +320,52 @@ internal object FCNPCServiceSpec : Spek({
         it("should return playbackRecord from factory") {
             assertThat(fcnpcService.loadPlaybackRecord(file))
                     .isEqualTo(playbackRecord)
+        }
+    }
+
+    describe("createNPC") {
+        val expectedNPC by memoized { mockk<FullyControllableNPC>() }
+        lateinit var npc: FullyControllableNPC
+
+        beforeEach {
+            every { fullyControllableNPCFactory.create("Hans_Wurst") } returns expectedNPC
+            npc = fcnpcService.createNPC("Hans_Wurst")
+        }
+
+        it("should return NPC") {
+            assertThat(npc)
+                    .isEqualTo(expectedNPC)
+        }
+    }
+
+    describe("loadNode") {
+        val nodeId = NodeId.valueOf(1337)
+        val expectedNode by memoized { mockk<Node>() }
+        lateinit var node: Node
+
+        beforeEach {
+            every { nodeLoader.load(nodeId) } returns expectedNode
+            node = fcnpcService.loadNode(nodeId)
+        }
+
+        it("should return node") {
+            assertThat(node)
+                    .isEqualTo(expectedNode)
+        }
+    }
+
+    describe("createMovePath") {
+        val expectedMovePath by memoized { mockk<MovePath>() }
+        lateinit var movePath: MovePath
+
+        beforeEach {
+            every { movePathFactory.create() } returns expectedMovePath
+            movePath = fcnpcService.createMovePath()
+        }
+
+        it("should return move path") {
+            assertThat(movePath)
+                    .isEqualTo(expectedMovePath)
         }
     }
 })
