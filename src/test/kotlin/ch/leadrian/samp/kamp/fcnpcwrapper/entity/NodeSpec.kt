@@ -24,7 +24,7 @@ import org.spekframework.spek2.style.specification.describe
 
 internal object NodeSpec : Spek({
     describe("init") {
-        listOf(0, FCNPCConstants.FCNPC_MAX_NODES - 1).forEach { nodeId ->
+        listOf(0, FCNPCConstants.MAX_NODES - 1).forEach { nodeId ->
             context("node ID is $nodeId") {
                 lateinit var node: Node
                 beforeEach {
@@ -38,7 +38,7 @@ internal object NodeSpec : Spek({
             }
         }
 
-        listOf(-1, FCNPCConstants.FCNPC_MAX_NODES).forEach { nodeId ->
+        listOf(-1, FCNPCConstants.MAX_NODES).forEach { nodeId ->
             context("node ID is $nodeId") {
                 var caughtThrowable: Throwable? = null
                 beforeEach {

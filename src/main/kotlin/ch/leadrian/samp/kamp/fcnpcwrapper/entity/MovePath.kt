@@ -24,7 +24,7 @@ internal constructor(private val nativeFunctions: FCNPCNativeFunctions) : Abstra
 
     init {
         id = MovePathId.valueOf(nativeFunctions.createMovePath())
-        if (id.value == FCNPCConstants.FCNPC_INVALID_MOVEPATH_ID) {
+        if (id.value == FCNPCConstants.INVALID_MOVEPATH_ID) {
             throw CreationFailedException("Could not create move path")
         }
     }

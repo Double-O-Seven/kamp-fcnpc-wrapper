@@ -56,7 +56,7 @@ internal object PlaybackSpec : Spek({
                         fcnpcNativeFunctions.startPlayingPlayback(
                                 npcid = npcId,
                                 file = "my_npc.rec",
-                                recordid = FCNPCConstants.FCNPC_INVALID_RECORD_ID,
+                                recordid = FCNPCConstants.INVALID_RECORD_ID,
                                 auto_unload = true,
                                 delta_x = 1f,
                                 delta_y = 2f,

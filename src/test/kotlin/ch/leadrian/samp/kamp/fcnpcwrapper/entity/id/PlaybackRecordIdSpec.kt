@@ -7,7 +7,7 @@ import org.spekframework.spek2.style.specification.describe
 
 internal object PlaybackRecordIdSpec : Spek({
     describe("valueOf") {
-        listOf(-1, 0, 999, 1000, FCNPCConstants.FCNPC_INVALID_RECORD_ID).forEach { value ->
+        listOf(-1, 0, 999, 1000, FCNPCConstants.INVALID_RECORD_ID).forEach { value ->
             it("should return PlaybackRecordId with value $value") {
                 val playbackRecordId = PlaybackRecordId.valueOf(value)
 
@@ -16,7 +16,7 @@ internal object PlaybackRecordIdSpec : Spek({
             }
         }
 
-        listOf(0, 500, 999, FCNPCConstants.FCNPC_INVALID_RECORD_ID).forEach { value ->
+        listOf(0, 500, 999, FCNPCConstants.INVALID_RECORD_ID).forEach { value ->
             it("should used cached PlaybackRecordId for value $value") {
                 val playbackRecordId = PlaybackRecordId.valueOf(value)
 

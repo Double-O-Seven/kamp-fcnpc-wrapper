@@ -37,7 +37,7 @@ internal object MovePathSpec : Spek({
             lateinit var caughtThrowable: Throwable
 
             beforeEachTest {
-                every { fcnpcNativeFunctions.createMovePath() } returns FCNPCConstants.FCNPC_INVALID_MOVEPATH_ID
+                every { fcnpcNativeFunctions.createMovePath() } returns FCNPCConstants.INVALID_MOVEPATH_ID
                 caughtThrowable = catchThrowable { MovePath(fcnpcNativeFunctions) }
             }
 

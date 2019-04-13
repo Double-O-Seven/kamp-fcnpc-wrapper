@@ -14,7 +14,7 @@ internal object NodeRegistrySpec : Spek({
 
         it("should be expected value") {
             assertThat(nodeRegistry.capacity)
-                    .isEqualTo(FCNPCConstants.FCNPC_MAX_NODES)
+                    .isEqualTo(FCNPCConstants.MAX_NODES)
         }
     }
 

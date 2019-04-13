@@ -7,7 +7,7 @@ data class NodeId internal constructor(override val value: Int) : EntityId {
 
     companion object {
 
-        private val nodeIds: Array<NodeId> = (0 until FCNPCConstants.FCNPC_MAX_NODES).map {
+        private val nodeIds: Array<NodeId> = (0 until FCNPCConstants.MAX_NODES).map {
             NodeId(it)
         }.toTypedArray()
 

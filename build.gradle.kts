@@ -12,7 +12,11 @@ buildscript {
             }
         }
 
-        classpath(group = "ch.leadrian.samp.kamp", name = "kamp-plugin-wrapper-generator", version = "1.0.0-rc1")
+        classpath(
+                group = "ch.leadrian.samp.kamp",
+                name = "kamp-plugin-wrapper-generator",
+                version = "1.0.0-rc1-4-g711ddb8"
+        )
     }
 }
 
@@ -24,6 +28,7 @@ plugins {
     maven
     signing
     `build-scan`
+    jacoco
     id("org.jetbrains.dokka") version "0.9.17"
     id("com.palantir.git-version") version "0.12.0-rc2"
 }
@@ -36,6 +41,10 @@ repositories {
     maven {
         setUrl("https://dl.bintray.com/spekframework/spek")
     }
+}
+
+jacoco {
+    toolVersion = "0.8.3"
 }
 
 configure<PluginWrapperGeneratorExtension> {
@@ -106,6 +115,10 @@ tasks {
         useJUnitPlatform {
             includeEngines("spek2")
         }
+    }
+
+    jacocoTestReport {
+        dependsOn(test)
     }
 
     dokka {

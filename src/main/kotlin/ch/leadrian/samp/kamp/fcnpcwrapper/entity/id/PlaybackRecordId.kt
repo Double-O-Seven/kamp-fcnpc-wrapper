@@ -7,7 +7,7 @@ data class PlaybackRecordId internal constructor(override val value: Int) : Enti
 
     companion object {
 
-        val INVALID = PlaybackRecordId(FCNPCConstants.FCNPC_INVALID_RECORD_ID)
+        val INVALID = PlaybackRecordId(FCNPCConstants.INVALID_RECORD_ID)
 
         private val playbackRecordIds: Array<PlaybackRecordId> = (0 until 1000).map {
             PlaybackRecordId(it)

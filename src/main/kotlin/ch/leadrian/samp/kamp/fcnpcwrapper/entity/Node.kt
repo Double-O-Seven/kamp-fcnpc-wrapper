@@ -20,7 +20,7 @@ internal constructor(
 ) : Entity<NodeId>, AutoCloseable {
 
     init {
-        require(id.value in 0 until FCNPCConstants.FCNPC_MAX_NODES) {
+        require(id.value in 0 until FCNPCConstants.MAX_NODES) {
             "Invalid node ID: ${id.value}"
         }
     }

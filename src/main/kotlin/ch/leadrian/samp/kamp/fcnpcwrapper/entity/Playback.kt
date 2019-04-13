@@ -30,7 +30,7 @@ internal constructor(
         val success = nativeFunctions.startPlayingPlayback(
                 npcid = npc.id.value,
                 file = file,
-                recordid = FCNPCConstants.FCNPC_INVALID_RECORD_ID,
+                recordid = FCNPCConstants.INVALID_RECORD_ID,
                 auto_unload = autoUnload,
                 delta_x = delta.x,
                 delta_y = delta.y,

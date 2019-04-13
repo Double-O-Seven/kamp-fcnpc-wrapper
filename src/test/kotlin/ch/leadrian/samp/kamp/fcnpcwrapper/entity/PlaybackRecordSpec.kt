@@ -43,7 +43,7 @@ internal object PlaybackRecordSpec : Spek({
             lateinit var caughtThrowable: Throwable
 
             beforeEach {
-                every { fcnpcNativeFunctions.loadPlayingPlayback(file) } returns FCNPCConstants.FCNPC_INVALID_RECORD_ID
+                every { fcnpcNativeFunctions.loadPlayingPlayback(file) } returns FCNPCConstants.INVALID_RECORD_ID
                 caughtThrowable = catchThrowable { PlaybackRecord(file, fcnpcNativeFunctions) }
             }
 

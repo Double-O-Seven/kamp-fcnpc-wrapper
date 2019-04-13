@@ -10,4 +10,4 @@ import javax.inject.Singleton
 @Singleton
 internal class NodeRegistry
 @Inject
-constructor() : EntityRegistry<Node, NodeId>(arrayOfNulls(FCNPCConstants.FCNPC_MAX_NODES))
+constructor() : EntityRegistry<Node, NodeId>(arrayOfNulls(FCNPCConstants.MAX_NODES))

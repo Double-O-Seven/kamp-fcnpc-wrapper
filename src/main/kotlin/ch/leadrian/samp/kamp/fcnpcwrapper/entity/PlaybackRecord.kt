@@ -19,7 +19,7 @@ internal constructor(
 
     init {
         id = PlaybackRecordId.valueOf(nativeFunctions.loadPlayingPlayback(file))
-        if (id.value == FCNPCConstants.FCNPC_INVALID_RECORD_ID) {
+        if (id.value == FCNPCConstants.INVALID_RECORD_ID) {
             throw CreationFailedException("Could not load record from file: $file")
         }
     }
