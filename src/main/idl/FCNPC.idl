@@ -61,7 +61,7 @@ const int FCNPC_INVALID_RECORD_ID = -1;
 [callback] void FCNPC_OnVehicleExitComplete(int npcid, int vehicleid);
 [callback] bool FCNPC_OnVehicleTakeDamage(int npcid, int issuerid, int vehicleid, float amount, int weaponid, float fX, float fY, float fZ);
 
-[callback] bool FCNPC_OnFinishPlayback(int npcid);
+[callback] void FCNPC_OnFinishPlayback(int npcid);
 
 [callback] void FCNPC_OnFinishNode(int npcid, int nodeid);
 [callback] bool FCNPC_OnFinishNodePoint(int npcid, int nodeid, int pointid);
