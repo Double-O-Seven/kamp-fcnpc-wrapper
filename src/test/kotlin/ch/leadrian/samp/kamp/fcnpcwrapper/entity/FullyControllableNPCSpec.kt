@@ -22,7 +22,6 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveSpeed
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveType
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.GoByMovePathParameters
-import ch.leadrian.samp.kamp.fcnpcwrapper.data.GoToParameters
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCCombatFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCSurfingFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FCNPCVehicleFactory
@@ -1097,17 +1096,18 @@ internal object FullyControllableNPCSpec : Spek({
             }
         }
     }
-})
+}) {
 
-fun getGoByMovePathParameters(): List<GoByMovePathParameters> {
-    return Stream
-            .of(
-                    Arrays.stream(MoveType.values()).map { GoByMovePathParameters().copy(type = it) },
-                    Arrays.stream(MoveSpeed.values()).map { GoByMovePathParameters().copy(speed = it) },
-                    Arrays.stream(MoveMode.values()).map { GoByMovePathParameters().copy(mode = it) },
-                    Arrays.stream(MovePathFinding.values()).map { GoByMovePathParameters().copy(pathFinding = it) },
-                    Stream.of(true, false).map { GoByMovePathParameters().copy(setAngle = it) }
-            )
-            .flatMap(Function.identity())
-            .toList()
+    fun getGoByMovePathParameters(): List<GoByMovePathParameters> {
+        return Stream
+                .of(
+                        Arrays.stream(MoveType.values()).map { GoByMovePathParameters().copy(type = it) },
+                        Arrays.stream(MoveSpeed.values()).map { GoByMovePathParameters().copy(speed = it) },
+                        Arrays.stream(MoveMode.values()).map { GoByMovePathParameters().copy(mode = it) },
+                        Arrays.stream(MovePathFinding.values()).map { GoByMovePathParameters().copy(pathFinding = it) },
+                        Stream.of(true, false).map { GoByMovePathParameters().copy(setAngle = it) }
+                )
+                .flatMap(Function.identity())
+                .toList()
+    }
 }

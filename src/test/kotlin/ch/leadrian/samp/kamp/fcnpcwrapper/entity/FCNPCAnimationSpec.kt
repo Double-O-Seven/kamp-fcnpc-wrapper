@@ -231,35 +231,35 @@ internal object FCNPCAnimationSpec : Spek({
             verify { fcnpcNativeFunctions.clearAnimations(npcId) }
         }
     }
-})
+}) {
 
-private data class AnimationFlags(val loop: Boolean, val lockX: Boolean, val lockY: Boolean, val freeze: Boolean) {
+    private data class AnimationFlags(val loop: Boolean, val lockX: Boolean, val lockY: Boolean, val freeze: Boolean) {
 
-    companion object {
+        companion object {
 
-        @Suppress("BooleanLiteralArgument")
-        val allCombinations: List<AnimationFlags>
-            get() {
-                val combinations = mutableListOf<AnimationFlags>()
-                listOf(true, false).forEach { loop ->
-                    listOf(true, false).forEach { lockX ->
-                        listOf(true, false).forEach { lockY ->
-                            listOf(true, false).forEach { freeze ->
-                                combinations.add(
-                                        AnimationFlags(
-                                                loop = loop,
-                                                lockX = lockX,
-                                                lockY = lockY,
-                                                freeze = freeze
-                                        )
-                                )
+            @Suppress("BooleanLiteralArgument")
+            val allCombinations: List<AnimationFlags>
+                get() {
+                    val combinations = mutableListOf<AnimationFlags>()
+                    listOf(true, false).forEach { loop ->
+                        listOf(true, false).forEach { lockX ->
+                            listOf(true, false).forEach { lockY ->
+                                listOf(true, false).forEach { freeze ->
+                                    combinations.add(
+                                            AnimationFlags(
+                                                    loop = loop,
+                                                    lockX = lockX,
+                                                    lockY = lockY,
+                                                    freeze = freeze
+                                            )
+                                    )
+                                }
                             }
                         }
                     }
+                    return combinations
                 }
-                return combinations
-            }
 
+        }
     }
-
 }
