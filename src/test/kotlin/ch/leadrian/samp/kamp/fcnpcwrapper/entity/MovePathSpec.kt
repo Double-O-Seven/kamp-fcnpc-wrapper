@@ -10,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.assertAll
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -77,6 +78,11 @@ internal object MovePathSpec : Spek({
                         .containsExactlyInAnyOrder(movePathPoint)
             }
 
+            it("should get point by ID") {
+                assertThat(movePath[movePathPointId])
+                        .isEqualTo(movePathPoint)
+            }
+
             context("another point is added") {
                 val movePathPointId2 = MovePathPointId.valueOf(187)
                 lateinit var movePathPoint2: MovePathPoint
@@ -96,6 +102,13 @@ internal object MovePathSpec : Spek({
                 it("should add point to points") {
                     assertThat(movePath.points)
                             .containsExactlyInAnyOrder(movePathPoint, movePathPoint2)
+                }
+
+                it("should get points by ID") {
+                    assertAll(
+                            { assertThat(movePath[movePathPointId]).isEqualTo(movePathPoint) },
+                            { assertThat(movePath[movePathPointId2]).isEqualTo(movePathPoint2) }
+                    )
                 }
             }
         }

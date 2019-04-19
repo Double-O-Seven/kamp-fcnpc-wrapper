@@ -29,6 +29,10 @@ internal constructor(private val nativeFunctions: FCNPCNativeFunctions) : Abstra
         }
     }
 
+    operator fun get(movePathPointId: MovePathPointId): MovePathPoint =
+            pointsById[movePathPointId]
+                    ?: throw IllegalArgumentException("Invalid move path point ID ${movePathPointId.value} for move path ${id.value}")
+
     fun addPoint(coordinates: Vector3D): MovePathPoint {
         val pointId = nativeFunctions.addPointToMovePath(id.value, coordinates.x, coordinates.y, coordinates.z)
         val point = MovePathPoint(MovePathPointId.valueOf(pointId), this, nativeFunctions)
