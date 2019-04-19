@@ -9,7 +9,7 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.entity.Node
 interface OnNPCChangeNodeListener {
 
     @IgnoredReturnValue(Result.Continue::class)
-    fun onNPCFinishNode(npc: FullyControllableNPC, oldNode: Node, newNode: Node): Result
+    fun onNPCChangeNode(npc: FullyControllableNPC, oldNode: Node, newNode: Node): Result
 
     sealed class Result(val value: Boolean) {
 
