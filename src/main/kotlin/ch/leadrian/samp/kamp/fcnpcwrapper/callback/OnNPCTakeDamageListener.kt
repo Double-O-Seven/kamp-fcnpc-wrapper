@@ -13,11 +13,11 @@ interface OnNPCTakeDamageListener {
     @IgnoredReturnValue(Result.Allow::class)
     fun onNPCTakeDamage(
             npc: FullyControllableNPC,
-            damagedPlayer: Player,
+            issuer: Player?,
             amount: Float,
             weaponModel: WeaponModel,
             bodyPart: BodyPart
-    )
+    ): Result
 
     sealed class Result(val value: Boolean) {
 
