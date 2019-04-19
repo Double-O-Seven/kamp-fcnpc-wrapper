@@ -15,7 +15,7 @@ buildscript {
         classpath(
                 group = "ch.leadrian.samp.kamp",
                 name = "kamp-plugin-wrapper-generator",
-                version = "1.0.0-rc1-4-g711ddb8"
+                version = "1.0.0-rc2"
         )
     }
 }
@@ -57,7 +57,7 @@ configure<PluginWrapperGeneratorExtension> {
 }
 
 dependencies {
-    val kampVersion = "1.0.0-rc6-7-gce63bbf"
+    val kampVersion = "1.0.0-rc6-8-g9d780c9"
 
     api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = kampVersion)
     api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = kampVersion)
