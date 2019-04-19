@@ -57,7 +57,7 @@ configure<PluginWrapperGeneratorExtension> {
 }
 
 dependencies {
-    val kampVersion = "1.0.0-rc6-8-g9d780c9"
+    val kampVersion = "1.0.0-rc7"
 
     api(group = "ch.leadrian.samp.kamp", name = "kamp-core", version = kampVersion)
     api(group = "ch.leadrian.samp.kamp", name = "kamp-annotations", version = kampVersion)
