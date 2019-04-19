@@ -8,4 +8,8 @@ interface FCNPCEntityResolver : EntityResolver {
 
     fun Int.toNPC(): FullyControllableNPC
 
+    fun Int.toNode(): Node
+
+    fun Int.toMovePath(): MovePath
+
 }
