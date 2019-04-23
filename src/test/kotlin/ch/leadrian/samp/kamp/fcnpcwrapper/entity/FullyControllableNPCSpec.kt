@@ -16,6 +16,7 @@ import ch.leadrian.samp.kamp.core.api.entity.Player
 import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
 import ch.leadrian.samp.kamp.core.api.exception.AlreadyDestroyedException
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
+import ch.leadrian.samp.kamp.core.api.service.PlayerService
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MovePathFinding
@@ -42,6 +43,7 @@ import kotlin.streams.toList
 
 internal object FullyControllableNPCSpec : Spek({
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
+    val playerService by memoized { mockk<PlayerService>() }
     val fcnpcCombatFactory by memoized { mockk<FCNPCCombatFactory>(relaxed = true) }
     val fcnpcVehicleFactory by memoized { mockk<FCNPCVehicleFactory>(relaxed = true) }
     val fcnpcSurfingFactory by memoized { mockk<FCNPCSurfingFactory>(relaxed = true) }
@@ -56,6 +58,7 @@ internal object FullyControllableNPCSpec : Spek({
                 FullyControllableNPC(
                         name,
                         fcnpcNativeFunctions,
+                        playerService,
                         fcnpcCombatFactory,
                         fcnpcVehicleFactory,
                         fcnpcSurfingFactory
@@ -83,6 +86,7 @@ internal object FullyControllableNPCSpec : Spek({
                     FullyControllableNPC(
                             name,
                             fcnpcNativeFunctions,
+                            playerService,
                             fcnpcCombatFactory,
                             fcnpcVehicleFactory,
                             fcnpcSurfingFactory
@@ -104,6 +108,7 @@ internal object FullyControllableNPCSpec : Spek({
             FullyControllableNPC(
                     name,
                     fcnpcNativeFunctions,
+                    playerService,
                     fcnpcCombatFactory,
                     fcnpcVehicleFactory,
                     fcnpcSurfingFactory
@@ -1077,6 +1082,21 @@ internal object FullyControllableNPCSpec : Spek({
                         }
                     }
                 }
+            }
+        }
+
+        describe("toPlayer") {
+            val expectedPlayer by memoized { mockk<Player>() }
+            lateinit var player: Player
+
+            beforeEach {
+                every { playerService.getPlayer(PlayerId.valueOf(npcId)) } returns expectedPlayer
+                player = npc.toPlayer()
+            }
+
+            it("should return player") {
+                assertThat(player)
+                        .isEqualTo(expectedPlayer)
             }
         }
 

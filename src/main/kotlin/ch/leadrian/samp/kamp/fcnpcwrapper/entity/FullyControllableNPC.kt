@@ -25,6 +25,7 @@ import ch.leadrian.samp.kamp.core.api.entity.extension.EntityExtensionContainer
 import ch.leadrian.samp.kamp.core.api.entity.extension.Extendable
 import ch.leadrian.samp.kamp.core.api.entity.requireNotDestroyed
 import ch.leadrian.samp.kamp.core.api.exception.CreationFailedException
+import ch.leadrian.samp.kamp.core.api.service.PlayerService
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCNativeFunctions
 import ch.leadrian.samp.kamp.fcnpcwrapper.constants.MoveMode
 import ch.leadrian.samp.kamp.fcnpcwrapper.data.GoByMovePathParameters
@@ -37,6 +38,7 @@ class FullyControllableNPC
 internal constructor(
         val name: String,
         private val nativeFunctions: FCNPCNativeFunctions,
+        private val playerService: PlayerService,
         combatFactory: FCNPCCombatFactory,
         vehicleFactory: FCNPCVehicleFactory,
         surfingFactory: FCNPCSurfingFactory
@@ -333,6 +335,8 @@ internal constructor(
                 min_distance = parameters.minDistance
         )
     }
+
+    fun toPlayer(): Player = playerService.getPlayer(id.toPlayerId())
 
     override fun onDestroy() {
         extensions.destroy()

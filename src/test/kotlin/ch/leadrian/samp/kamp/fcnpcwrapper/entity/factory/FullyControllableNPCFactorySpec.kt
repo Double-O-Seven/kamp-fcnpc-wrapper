@@ -15,7 +15,14 @@ internal object FullyControllableNPCFactorySpec : Spek({
     val fullyControllableNPCRegistry by memoized { mockk<FullyControllableNPCRegistry>() }
     val nativeFunctions by memoized { mockk<FCNPCNativeFunctions>(relaxed = true) }
     val fullyControllableNPCFactory by memoized {
-        FullyControllableNPCFactory(nativeFunctions, mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true), fullyControllableNPCRegistry)
+        FullyControllableNPCFactory(
+                nativeFunctions = nativeFunctions,
+                playerService = mockk(),
+                combatFactory = mockk(relaxed = true),
+                vehicleFactory = mockk(relaxed = true),
+                surfingFactory = mockk(relaxed = true),
+                fullyControllableNPCRegistry = fullyControllableNPCRegistry
+        )
     }
 
     describe("create") {
