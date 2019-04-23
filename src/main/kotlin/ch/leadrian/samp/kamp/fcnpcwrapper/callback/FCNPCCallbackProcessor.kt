@@ -16,6 +16,7 @@ import ch.leadrian.samp.kamp.core.api.exception.tryAndCatch
 import ch.leadrian.samp.kamp.core.api.util.loggerFor
 import ch.leadrian.samp.kamp.fcnpcwrapper.FCNPCCallbacks
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.FCNPCEntityResolver
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.MovePathPointId
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,7 +58,7 @@ constructor(
 
     override fun onCreate(npcid: Int) {
         tryAndCatch {
-            onNPCCreateHandler.onNPCCreate(npcid.toNPC())
+            onNPCCreateHandler.onNPCCreate(FullyControllableNPCId.valueOf(npcid))
         }
     }
 

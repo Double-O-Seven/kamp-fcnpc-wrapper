@@ -19,6 +19,7 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.entity.FullyControllableNPC
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.MovePath
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.MovePathPoint
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.Node
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.MovePathPointId
 import io.mockk.Runs
 import io.mockk.every
@@ -87,16 +88,14 @@ internal class FCNPCCallbackProcessorSpec : Spek({
 
     describe("onCreate") {
         val npcId = 1337
-        val npc by memoized { mockk<FullyControllableNPC>() }
 
         beforeEach {
             every { onNPCCreateHandler.onNPCCreate(any()) } just Runs
-            every { entityResolver.run { npcId.toNPC() } } returns npc
             fcnpcCallbackProcessor.onCreate(npcId)
         }
 
         it("should call onNPCCreateHandler.onNPCCreate") {
-            verify { onNPCCreateHandler.onNPCCreate(npc) }
+            verify { onNPCCreateHandler.onNPCCreate(FullyControllableNPCId.valueOf(npcId)) }
         }
     }
 
