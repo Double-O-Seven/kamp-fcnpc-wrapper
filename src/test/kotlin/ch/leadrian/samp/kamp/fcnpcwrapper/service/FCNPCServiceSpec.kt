@@ -15,16 +15,20 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FullyControllableNPCFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.MovePathFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.PlaybackRecordFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.NodeId
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.registry.FullyControllableNPCRegistry
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 internal object FCNPCServiceSpec : Spek({
     val fullyControllableNPCFactory by memoized { mockk<FullyControllableNPCFactory>() }
+    val fullyControllableNPCRegistry by memoized { mockk<FullyControllableNPCRegistry>() }
     val nodeLoader by memoized { mockk<NodeLoader>() }
     val movePathFactory by memoized { mockk<MovePathFactory>() }
     val fcnpcNativeFunctions by memoized { mockk<FCNPCNativeFunctions>() }
@@ -32,6 +36,7 @@ internal object FCNPCServiceSpec : Spek({
     val fcnpcService by memoized {
         FCNPCService(
                 fullyControllableNPCFactory,
+                fullyControllableNPCRegistry,
                 nodeLoader,
                 movePathFactory,
                 playbackRecordFactory,
@@ -335,6 +340,56 @@ internal object FCNPCServiceSpec : Spek({
         it("should return NPC") {
             assertThat(npc)
                     .isEqualTo(expectedNPC)
+        }
+    }
+
+    describe("getAllNPCs") {
+        val npc1 by memoized { mockk<FullyControllableNPC>() }
+        val npc2 by memoized { mockk<FullyControllableNPC>() }
+        lateinit var allNPCs: List<FullyControllableNPC>
+
+        beforeEach {
+            every { fullyControllableNPCRegistry.getAll() } returns listOf(npc1, npc2)
+            allNPCs = fcnpcService.getAllNPCs()
+        }
+
+        it("should return all NPCs") {
+            assertThat(allNPCs)
+                    .containsExactly(npc1, npc2)
+        }
+    }
+
+    describe("getNPC") {
+        val npcId = FullyControllableNPCId.valueOf(1337)
+
+        context("NPC ID is valid") {
+            val expectedNPC by memoized { mockk<FullyControllableNPC>() }
+            lateinit var npc: FullyControllableNPC
+
+            beforeEach {
+                every { fullyControllableNPCRegistry[npcId] } returns expectedNPC
+                npc = fcnpcService.getNPC(npcId)
+            }
+
+            it("should return NPC") {
+                assertThat(npc)
+                        .isEqualTo(expectedNPC)
+            }
+        }
+
+        context("NPC ID is invalid") {
+            lateinit var caughtThrowable: Throwable
+
+            beforeEach {
+                every { fullyControllableNPCRegistry[npcId] } returns null
+                caughtThrowable = catchThrowable { fcnpcService.getNPC(npcId) }
+            }
+
+            it("should throw exception") {
+                assertThat(caughtThrowable)
+                        .isInstanceOf(IllegalArgumentException::class.java)
+                        .hasMessage("Invalid NPC ID: 1337")
+            }
         }
     }
 

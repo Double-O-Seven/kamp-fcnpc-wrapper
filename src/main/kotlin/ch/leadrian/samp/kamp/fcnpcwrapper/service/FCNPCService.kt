@@ -15,7 +15,9 @@ import ch.leadrian.samp.kamp.fcnpcwrapper.entity.PlaybackRecord
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.FullyControllableNPCFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.MovePathFactory
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.factory.PlaybackRecordFactory
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.FullyControllableNPCId
 import ch.leadrian.samp.kamp.fcnpcwrapper.entity.id.NodeId
+import ch.leadrian.samp.kamp.fcnpcwrapper.entity.registry.FullyControllableNPCRegistry
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +26,7 @@ class FCNPCService
 @Inject
 internal constructor(
         private val fullyControllableNPCFactory: FullyControllableNPCFactory,
+        private val fullyControllableNPCRegistry: FullyControllableNPCRegistry,
         private val nodeLoader: NodeLoader,
         private val movePathFactory: MovePathFactory,
         private val playbackRecordFactory: PlaybackRecordFactory,
@@ -102,6 +105,11 @@ internal constructor(
     fun loadPlaybackRecord(file: String): PlaybackRecord = playbackRecordFactory.load(file)
 
     fun createNPC(name: String): FullyControllableNPC = fullyControllableNPCFactory.create(name)
+
+    fun getAllNPCs(): List<FullyControllableNPC> = fullyControllableNPCRegistry.getAll()
+
+    fun getNPC(npcId: FullyControllableNPCId): FullyControllableNPC =
+            fullyControllableNPCRegistry[npcId] ?: throw IllegalArgumentException("Invalid NPC ID: ${npcId.value}")
 
     fun loadNode(nodeId: NodeId): Node = nodeLoader.load(nodeId)
 
