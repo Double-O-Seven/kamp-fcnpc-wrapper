@@ -1,24 +1,5 @@
-import ch.leadrian.samp.kamp.gradle.plugin.pluginwrappergenerator.PluginWrapperGeneratorExtension
 import com.google.common.base.CaseFormat
 import groovy.lang.Closure
-
-buildscript {
-    dependencies {
-        repositories {
-            mavenCentral()
-            mavenLocal()
-            maven {
-                setUrl("https://plugins.gradle.org/m2/")
-            }
-        }
-
-        classpath(
-                group = "ch.leadrian.samp.kamp",
-                name = "kamp-plugin-wrapper-generator",
-                version = "1.0.0-rc2"
-        )
-    }
-}
 
 plugins {
     kotlin("jvm") version "1.3.11"
@@ -31,9 +12,8 @@ plugins {
     jacoco
     id("org.jetbrains.dokka") version "0.9.17"
     id("com.palantir.git-version") version "0.12.0-rc2"
+    id("ch.leadrian.samp.kamp.kamp-plugin-wrapper-generator") version "1.0.0-rc2"
 }
-
-apply(plugin = "kamp-plugin-wrapper-generator")
 
 repositories {
     mavenCentral()
@@ -41,19 +21,6 @@ repositories {
     maven {
         setUrl("https://dl.bintray.com/spekframework/spek")
     }
-}
-
-jacoco {
-    toolVersion = "0.8.3"
-}
-
-configure<PluginWrapperGeneratorExtension> {
-    packageName = "ch.leadrian.samp.kamp.fcnpcwrapper"
-    pluginName = "FCNPC"
-    removePrefix("FCNPC_")
-    nativeFunctionsCaseFormat = CaseFormat.UPPER_CAMEL
-    callbacksCaseFormat = CaseFormat.UPPER_CAMEL
-    interfaceDefintionFile(project.projectDir.resolve("src/main/idl/FCNPC.idl"))
 }
 
 dependencies {
@@ -126,6 +93,19 @@ tasks {
     dokka {
         reportUndocumented = false
     }
+}
+
+jacoco {
+    toolVersion = "0.8.3"
+}
+
+pluginWrapperGenerator {
+    packageName = "ch.leadrian.samp.kamp.fcnpcwrapper"
+    pluginName = "FCNPC"
+    removePrefix("FCNPC_")
+    nativeFunctionsCaseFormat = CaseFormat.UPPER_CAMEL
+    callbacksCaseFormat = CaseFormat.UPPER_CAMEL
+    interfaceDefintionFile(project.projectDir.resolve("src/main/idl/FCNPC.idl"))
 }
 
 publishing {
