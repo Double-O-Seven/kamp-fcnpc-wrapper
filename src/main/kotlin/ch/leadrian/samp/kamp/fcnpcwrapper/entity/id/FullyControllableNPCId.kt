@@ -2,8 +2,11 @@ package ch.leadrian.samp.kamp.fcnpcwrapper.entity.id
 
 import ch.leadrian.samp.kamp.core.api.constants.SAMPConstants
 import ch.leadrian.samp.kamp.core.api.entity.id.EntityId
+import ch.leadrian.samp.kamp.core.api.entity.id.PlayerId
 
 data class FullyControllableNPCId internal constructor(override val value: Int) : EntityId {
+
+    fun toPlayerId(): PlayerId = PlayerId.valueOf(value)
 
     companion object {
 
@@ -21,3 +24,5 @@ data class FullyControllableNPCId internal constructor(override val value: Int) 
                 }
     }
 }
+
+fun PlayerId.toFullyControllableNPCId(): FullyControllableNPCId = FullyControllableNPCId.valueOf(value)
