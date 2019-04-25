@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Double-O-Seven/kamp-fcnpc-wrapper.svg?branch=master)](https://travis-ci.org/Double-O-Seven/kamp-fcnpc-wrapper)
+[![Release Version](https://img.shields.io/maven-central/v/ch.leadrian.samp.kamp/kamp-fcnpc-wrapper.svg?label=release)](http://search.maven.org/#search%7Cga%7C1%7Ckamp-fcnpc-wrapper)
 
 # Kamp FCNPC Wrapper
 
